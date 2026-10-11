@@ -14,6 +14,10 @@ config/name="Beauty, Rage, Balance"
 config/description="A 3D life simulation about the self-directed life of an independent woman."
 config/features=PackedStringArray("4.3", "Forward Plus")
 
+[autoload]
+
+EventBus="*res://autoload/event_bus.gd"
+
 [debug]
 
 gdscript/warnings/untyped_declaration=1
