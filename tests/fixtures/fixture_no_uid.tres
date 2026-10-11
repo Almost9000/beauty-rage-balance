@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="FixtureItem" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/fixtures/fixture_item.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+title = "Fixture Without UID"
