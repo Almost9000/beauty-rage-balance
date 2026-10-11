@@ -1,0 +1,29 @@
+# Godot 4 cache / import artefacts (regenerated; .import and .uid sidecars ARE committed)
+.godot/
+/android/
+
+# Exports & local builds
+/build/
+/exports/
+*.translation
+
+# Blender / Krita backups
+*.blend1
+*.blend2
+*~
+*.kra~
+
+# Mono/C# (unused, defensive)
+.mono/
+data_*/
+mono_crash.*.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secrets (never commit)
+.env
+.env.*
