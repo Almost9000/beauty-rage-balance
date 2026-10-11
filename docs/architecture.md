@@ -14,6 +14,7 @@ All autoload managers in *Beauty, Rage, Balance* must adhere strictly to this co
 4. **Initialization Dependency Order**: `_ready()` in any manager may touch only autoloads registered strictly above it in the autoload order.
 5. **Gameplay Timing**: Gameplay time comes from `GameClock` only; never use Godot `Timer` nodes for gameplay logic, deadlines, or countdowns.
 6. **Test Isolation**: Automated unit tests must call `reset_state()` on every manager they touch in their `before_each()` hook.
+7. **Time Integration & Listener Contract**: Managers that track decay, stats, schedules, or periodic updates must integrate `GameClock.minute_ticked(now)` as a 1-minute segment and `GameClock.time_skipped(from_min, to_min)` using the exact same code path (e.g. `_integrate_decay(from_min: int, to_min: int)`), ensuring that `skip(N)` and N individual minute ticks produce identical results.
 
 ---
 

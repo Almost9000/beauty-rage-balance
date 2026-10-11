@@ -42,6 +42,7 @@ func change_level(level_path: String, spawn_id: StringName = &"default") -> void
 	var from_id: String = current_level_id
 
 	level_changing.emit(from_id, to_id)
+	GameClock.pause(&"transition")
 
 	if _fade_rect:
 		_fade_rect.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -59,6 +60,7 @@ func change_level(level_path: String, spawn_id: StringName = &"default") -> void
 			abort_tween.tween_property(_fade_rect, "color:a", 0.0, FADE_DURATION)
 			await abort_tween.finished
 			_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		GameClock.resume(&"transition")
 		_is_transitioning = false
 		return
 
@@ -76,6 +78,7 @@ func change_level(level_path: String, spawn_id: StringName = &"default") -> void
 		await fade_in_tween.finished
 		_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+	GameClock.resume(&"transition")
 	_is_transitioning = false
 
 func consume_spawn_id() -> StringName:
@@ -98,6 +101,8 @@ func reset_state() -> void:
 	_level_states.clear()
 	current_level_id = ""
 	_pending_spawn_id = &"default"
+	if _is_transitioning:
+		GameClock.resume(&"transition")
 	_is_transitioning = false
 	if _fade_rect:
 		_fade_rect.color.a = 0.0

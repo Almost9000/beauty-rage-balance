@@ -21,6 +21,7 @@ func _ready() -> void:
 
 	_panel_root.visible = false
 	_setup_world_section()
+	_setup_time_section()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_toggle"):
@@ -64,6 +65,62 @@ func _get_current_level_id() -> String:
 	if scene_router:
 		return str(scene_router.get("current_level_id"))
 	return ""
+
+func _setup_time_section() -> void:
+	var time_section: Container = add_section("Time")
+	add_watch(time_section, "Day / Time", _get_debug_time_string)
+	add_watch(time_section, "Paused", _get_debug_paused_string)
+	add_watch(time_section, "Time Scale", _get_debug_scale_string)
+	add_button(time_section, "+1 h (Skip)", _on_skip_one_hour_pressed)
+	add_button(time_section, "+1 d (Skip)", _on_skip_one_day_pressed)
+	add_button(time_section, "Pause / Resume", _on_toggle_pause_pressed)
+	add_button(time_section, "Scale x1", func() -> void: _set_time_scale(1.0))
+	add_button(time_section, "Scale x10", func() -> void: _set_time_scale(10.0))
+	add_button(time_section, "Scale x60", func() -> void: _set_time_scale(60.0))
+
+func _get_game_clock() -> Node:
+	return get_node_or_null("/root/GameClock")
+
+func _get_debug_time_string() -> String:
+	var clock: Node = _get_game_clock()
+	if clock:
+		return "Day %d, %s (%d m)" % [int(clock.get("day")), str(clock.call("format_time")), int(clock.get("now_minutes"))]
+	return "--"
+
+func _get_debug_paused_string() -> String:
+	var clock: Node = _get_game_clock()
+	if clock and clock.has_method("is_paused"):
+		return "Yes" if clock.is_paused() else "No"
+	return "--"
+
+func _get_debug_scale_string() -> String:
+	var clock: Node = _get_game_clock()
+	if clock:
+		return "%.1fx" % float(clock.get("time_scale"))
+	return "--"
+
+func _on_skip_one_hour_pressed() -> void:
+	var clock: Node = _get_game_clock()
+	if clock and clock.has_method("skip"):
+		clock.skip(60)
+
+func _on_skip_one_day_pressed() -> void:
+	var clock: Node = _get_game_clock()
+	if clock and clock.has_method("skip"):
+		clock.skip(1440)
+
+func _on_toggle_pause_pressed() -> void:
+	var clock: Node = _get_game_clock()
+	if clock and clock.has_method("has_pause_reason"):
+		if clock.has_pause_reason(&"debug"):
+			clock.resume(&"debug")
+		else:
+			clock.pause(&"debug")
+
+func _set_time_scale(scale: float) -> void:
+	var clock: Node = _get_game_clock()
+	if clock:
+		clock.set("time_scale", scale)
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

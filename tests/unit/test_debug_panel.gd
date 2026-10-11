@@ -35,3 +35,64 @@ func test_debug_panel_api() -> void:
 
 	panel.toggle_panel()
 	assert_false(panel_root.visible)
+
+func test_debug_panel_time_section() -> void:
+	GameClock.reset_state()
+	var panel: CanvasLayer = load("res://ui/debug/debug_panel.tscn").instantiate()
+	add_child_autoqfree(panel)
+
+	panel.toggle_panel()
+
+	var sections_container: Node = panel.get_node("PanelRoot/MarginContainer/VBoxContainer/ScrollContainer/SectionsContainer")
+	assert_not_null(sections_container)
+
+	var time_section_node: Node = sections_container.get_node_or_null("Time")
+	assert_not_null(time_section_node, "Time section should exist in DebugPanel")
+
+	var items: Container = time_section_node.get_node_or_null("Items") as Container
+	assert_not_null(items)
+
+	# Test +1 h button
+	var skip_1h_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("+1 h"):
+			skip_1h_btn = child as Button
+			break
+	assert_not_null(skip_1h_btn, "+1 h button should exist")
+	skip_1h_btn.pressed.emit()
+	assert_eq(GameClock.now_minutes, 480)
+
+	# Test +1 d button
+	var skip_1d_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("+1 d"):
+			skip_1d_btn = child as Button
+			break
+	assert_not_null(skip_1d_btn, "+1 d button should exist")
+	skip_1d_btn.pressed.emit()
+	assert_eq(GameClock.now_minutes, 480 + 1440)
+
+	# Test toggle pause button
+	var pause_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("Pause"):
+			pause_btn = child as Button
+			break
+	assert_not_null(pause_btn, "Pause button should exist")
+	assert_false(GameClock.is_paused())
+	pause_btn.pressed.emit()
+	assert_true(GameClock.is_paused())
+	pause_btn.pressed.emit()
+	assert_false(GameClock.is_paused())
+
+	# Test scale buttons
+	var scale_60_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text == "Scale x60":
+			scale_60_btn = child as Button
+			break
+	assert_not_null(scale_60_btn, "Scale x60 button should exist")
+	scale_60_btn.pressed.emit()
+	assert_eq(GameClock.time_scale, 60.0)
+
+	GameClock.reset_state()
