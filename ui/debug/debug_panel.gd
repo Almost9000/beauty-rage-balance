@@ -22,6 +22,7 @@ func _ready() -> void:
 	_panel_root.visible = false
 	_setup_world_section()
 	_setup_time_section()
+	_setup_stats_section()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_toggle"):
@@ -121,6 +122,68 @@ func _set_time_scale(scale: float) -> void:
 	var clock: Node = _get_game_clock()
 	if clock:
 		clock.set("time_scale", scale)
+
+func _setup_stats_section() -> void:
+	var stats_section: Container = add_section("Stats")
+	add_watch(stats_section, "Sanity", func() -> String: return _get_stat_watch_string(Enums.Stat.SANITY))
+	add_watch(stats_section, "Health", func() -> String: return _get_stat_watch_string(Enums.Stat.HEALTH))
+	add_watch(stats_section, "Hygiene", func() -> String: return _get_stat_watch_string(Enums.Stat.HYGIENE))
+	add_watch(stats_section, "Rage", func() -> String: return _get_stat_watch_string(Enums.Stat.RAGE))
+	add_button(stats_section, "Sanity = 50", func() -> void: _set_debug_stat(Enums.Stat.SANITY, 50.0))
+	add_button(stats_section, "Health = 50", func() -> void: _set_debug_stat(Enums.Stat.HEALTH, 50.0))
+	add_button(stats_section, "Hygiene = 50", func() -> void: _set_debug_stat(Enums.Stat.HYGIENE, 50.0))
+	add_button(stats_section, "Rage = 50", func() -> void: _set_debug_stat(Enums.Stat.RAGE, 50.0))
+	add_button(stats_section, "Add Test +5/h (Sanity)", _on_add_test_pos_mod_pressed)
+	add_button(stats_section, "Add Test -5/h (Sanity)", _on_add_test_neg_mod_pressed)
+	add_button(stats_section, "Clear Test Modifiers", _on_clear_test_mods_pressed)
+
+func _get_status_manager() -> Node:
+	return get_node_or_null("/root/StatusManager")
+
+func _get_stat_watch_string(stat: Enums.Stat) -> String:
+	var sm: Node = _get_status_manager()
+	if sm and sm.has_method("get_value") and sm.has_method("get_effective_rate") and sm.has_method("get_max"):
+		var val: float = float(sm.call("get_value", stat))
+		var max_val: float = float(sm.call("get_max", stat))
+		var rate: float = float(sm.call("get_effective_rate", stat))
+		return "%.1f / %.1f (%+.2f/h)" % [val, max_val, rate]
+	return "--"
+
+func _set_debug_stat(stat: Enums.Stat, val: float) -> void:
+	var sm: Node = _get_status_manager()
+	if sm and sm.has_method("set_value"):
+		sm.call("set_value", stat, val)
+
+func _on_add_test_pos_mod_pressed() -> void:
+	var sm: Node = _get_status_manager()
+	if sm and sm.has_method("add_modifier"):
+		var mod: StatModifier = StatModifier.new()
+		mod.stat = Enums.Stat.SANITY
+		mod.kind = Enums.ModifierKind.RATE_ADD
+		mod.value = 5.0
+		mod.source_id = &"debug_test_pos"
+		mod.duration_min = 60
+		mod.label = "Debug +5/h"
+		sm.call("add_modifier", mod)
+
+func _on_add_test_neg_mod_pressed() -> void:
+	var sm: Node = _get_status_manager()
+	if sm and sm.has_method("add_modifier"):
+		var mod: StatModifier = StatModifier.new()
+		mod.stat = Enums.Stat.SANITY
+		mod.kind = Enums.ModifierKind.RATE_ADD
+		mod.value = -5.0
+		mod.source_id = &"debug_test_neg"
+		mod.duration_min = 60
+		mod.label = "Debug -5/h"
+		sm.call("add_modifier", mod)
+
+func _on_clear_test_mods_pressed() -> void:
+	var sm: Node = _get_status_manager()
+	if sm and sm.has_method("remove_by_source"):
+		sm.call("remove_by_source", &"debug_test")
+		sm.call("remove_by_source", &"debug_test_pos")
+		sm.call("remove_by_source", &"debug_test_neg")
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

@@ -96,3 +96,52 @@ func test_debug_panel_time_section() -> void:
 	assert_eq(GameClock.time_scale, 60.0)
 
 	GameClock.reset_state()
+
+func test_debug_panel_stats_section() -> void:
+	StatusManager.reset_state()
+	var panel: CanvasLayer = load("res://ui/debug/debug_panel.tscn").instantiate()
+	add_child_autoqfree(panel)
+
+	panel.toggle_panel()
+
+	var sections_container: Node = panel.get_node("PanelRoot/MarginContainer/VBoxContainer/ScrollContainer/SectionsContainer")
+	assert_not_null(sections_container)
+
+	var stats_section_node: Node = sections_container.get_node_or_null("Stats")
+	assert_not_null(stats_section_node, "Stats section should exist in DebugPanel")
+
+	var items: Container = stats_section_node.get_node_or_null("Items") as Container
+	assert_not_null(items)
+
+	# Test Sanity = 50 button
+	var set_sanity_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text == "Sanity = 50":
+			set_sanity_btn = child as Button
+			break
+	assert_not_null(set_sanity_btn, "Sanity = 50 button should exist")
+	set_sanity_btn.pressed.emit()
+	assert_eq(StatusManager.get_value(Enums.Stat.SANITY), 50.0)
+
+	# Test Add Test +5/h modifier button
+	var initial_rate: float = StatusManager.get_effective_rate(Enums.Stat.SANITY)
+	var add_pos_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("Add Test +5/h"):
+			add_pos_btn = child as Button
+			break
+	assert_not_null(add_pos_btn, "Add Test +5/h button should exist")
+	add_pos_btn.pressed.emit()
+	assert_almost_eq(StatusManager.get_effective_rate(Enums.Stat.SANITY), initial_rate + 5.0, 1e-4)
+
+	# Test Clear Test Modifiers button
+	var clear_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("Clear Test"):
+			clear_btn = child as Button
+			break
+	assert_not_null(clear_btn, "Clear Test Modifiers button should exist")
+	clear_btn.pressed.emit()
+	assert_almost_eq(StatusManager.get_effective_rate(Enums.Stat.SANITY), initial_rate, 1e-4)
+
+	StatusManager.reset_state()
