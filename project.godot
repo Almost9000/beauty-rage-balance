@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.3", "Forward Plus")
 
 EventBus="*res://autoload/event_bus.gd"
 GameClock="*res://autoload/game_clock.gd"
+StatusManager="*res://autoload/status_manager.gd"
 SceneRouter="*res://autoload/scene_router.gd"
 DebugPanel="*res://ui/debug/debug_panel.tscn"
 
