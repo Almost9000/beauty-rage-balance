@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6v2n7xkd5ypr"]
+
+[ext_resource type="Script" path="res://ui/debug/debug_panel.gd" id="1_debug"]
+
+[node name="DebugPanel" type="CanvasLayer"]
+process_mode = 3
+layer = 128
+script = ExtResource("1_debug")
+
+[node name="PanelRoot" type="PanelContainer" parent="."]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelRoot"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer"]
+layout_mode = 2
+
+[node name="HeaderHBox" type="HBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DEBUG PANEL (F3)"
+
+[node name="CloseButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/HeaderHBox"]
+layout_mode = 2
+text = " X "
+
+[node name="HSeparator" type="HSeparator" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SectionsContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="pressed" from="PanelRoot/MarginContainer/VBoxContainer/HeaderHBox/CloseButton" to="." method="_on_close_button_pressed"]

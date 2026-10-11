@@ -12,11 +12,14 @@ config_version=5
 
 config/name="Beauty, Rage, Balance"
 config/description="A 3D life simulation about the self-directed life of an independent woman."
+run/main_scene="res://levels/boot/boot.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 
 [autoload]
 
 EventBus="*res://autoload/event_bus.gd"
+SceneRouter="*res://autoload/scene_router.gd"
+DebugPanel="*res://ui/debug/debug_panel.tscn"
 
 [debug]
 
@@ -36,6 +39,22 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 [filesystem]
 
 import/blender/enabled=false
+
+[input]
+
+debug_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194334,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+
+[layer_names]
+
+3d_physics/layer_1="world"
+3d_physics/layer_2="player"
+3d_physics/layer_3="interactable"
+3d_physics/layer_4="dogs"
+3d_physics/layer_5="clutter"
 
 [rendering]
 
