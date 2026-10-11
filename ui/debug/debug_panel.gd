@@ -23,6 +23,7 @@ func _ready() -> void:
 	_setup_world_section()
 	_setup_time_section()
 	_setup_stats_section()
+	_setup_cycle_section()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_toggle"):
@@ -184,6 +185,59 @@ func _on_clear_test_mods_pressed() -> void:
 		sm.call("remove_by_source", &"debug_test")
 		sm.call("remove_by_source", &"debug_test_pos")
 		sm.call("remove_by_source", &"debug_test_neg")
+
+func _setup_cycle_section() -> void:
+	var cycle_section: Container = add_section("Cycle")
+	add_watch(cycle_section, "Phase", _get_debug_cycle_phase_string)
+	add_watch(cycle_section, "Day in Phase", _get_debug_cycle_day_string)
+	add_watch(cycle_section, "Cycle Length", _get_debug_cycle_length_string)
+	add_watch(cycle_section, "Intensity", _get_debug_cycle_intensity_string)
+	add_button(cycle_section, "Force Menstrual", func() -> void: _force_debug_phase(Enums.CyclePhase.MENSTRUAL))
+	add_button(cycle_section, "Force Follicular", func() -> void: _force_debug_phase(Enums.CyclePhase.FOLLICULAR))
+	add_button(cycle_section, "Force Ovulatory", func() -> void: _force_debug_phase(Enums.CyclePhase.OVULATORY))
+	add_button(cycle_section, "Force Luteal", func() -> void: _force_debug_phase(Enums.CyclePhase.LUTEAL))
+	add_button(cycle_section, "Intensity 0.0", func() -> void: _set_debug_intensity(0.0))
+	add_button(cycle_section, "Intensity 0.5", func() -> void: _set_debug_intensity(0.5))
+	add_button(cycle_section, "Intensity 1.0", func() -> void: _set_debug_intensity(1.0))
+	add_button(cycle_section, "Cycle Length 28d", func() -> void: _set_debug_cycle_length(28))
+	add_button(cycle_section, "Cycle Length 12d", func() -> void: _set_debug_cycle_length(12))
+
+func _get_cycle_manager() -> Node:
+	return get_node_or_null("/root/CycleManager")
+
+func _get_debug_cycle_phase_string() -> String:
+	var cm: Node = _get_cycle_manager()
+	if cm:
+		var p_val: Variant = cm.get("current_phase")
+		if p_val != null:
+			var phase_key: Variant = Enums.CyclePhase.find_key(int(p_val))
+			return str(phase_key) if phase_key != null else str(p_val)
+	return "--"
+
+func _get_debug_cycle_day_string() -> String:
+	var cm: Node = _get_cycle_manager()
+	if cm:
+		var dip: int = int(cm.get("day_in_phase"))
+		var dun: int = int(cm.get("days_until_next_phase"))
+		return "Day %d (next in %d d)" % [dip, dun]
+	return "--"
+
+func _get_debug_cycle_length_string() -> String:
+	return "%d days" % GameSettings.current().cycle_length_days
+
+func _get_debug_cycle_intensity_string() -> String:
+	return "%.1f" % GameSettings.current().symptom_intensity
+
+func _force_debug_phase(phase: Enums.CyclePhase) -> void:
+	var cm: Node = _get_cycle_manager()
+	if cm and cm.has_method("force_phase"):
+		cm.call("force_phase", phase)
+
+func _set_debug_intensity(val: float) -> void:
+	GameSettings.current().symptom_intensity = val
+
+func _set_debug_cycle_length(days: int) -> void:
+	GameSettings.current().cycle_length_days = days
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

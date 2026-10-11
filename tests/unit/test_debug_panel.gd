@@ -145,3 +145,68 @@ func test_debug_panel_stats_section() -> void:
 	assert_almost_eq(StatusManager.get_effective_rate(Enums.Stat.SANITY), initial_rate, 1e-4)
 
 	StatusManager.reset_state()
+
+func test_debug_panel_cycle_section() -> void:
+	GameSettings.reset_current()
+	GameClock.reset_state()
+	StatusManager.reset_state()
+	CycleManager.reset_state()
+
+	var panel: CanvasLayer = load("res://ui/debug/debug_panel.tscn").instantiate()
+	add_child_autoqfree(panel)
+
+	panel.toggle_panel()
+
+	var sections_container: Node = panel.get_node("PanelRoot/MarginContainer/VBoxContainer/ScrollContainer/SectionsContainer")
+	assert_not_null(sections_container)
+
+	var cycle_section_node: Node = sections_container.get_node_or_null("Cycle")
+	assert_not_null(cycle_section_node, "Cycle section should exist in DebugPanel")
+
+	var items: Container = cycle_section_node.get_node_or_null("Items") as Container
+	assert_not_null(items)
+
+	# Test Force Luteal button
+	var force_luteal_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text == "Force Luteal":
+			force_luteal_btn = child as Button
+			break
+	assert_not_null(force_luteal_btn, "Force Luteal button should exist")
+	force_luteal_btn.pressed.emit()
+	assert_eq(CycleManager.current_phase, Enums.CyclePhase.LUTEAL)
+
+	# Test Force Menstrual button
+	var force_menstrual_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text == "Force Menstrual":
+			force_menstrual_btn = child as Button
+			break
+	assert_not_null(force_menstrual_btn, "Force Menstrual button should exist")
+	force_menstrual_btn.pressed.emit()
+	assert_eq(CycleManager.current_phase, Enums.CyclePhase.MENSTRUAL)
+
+	# Test Intensity 0.5 button
+	var int_05_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text == "Intensity 0.5":
+			int_05_btn = child as Button
+			break
+	assert_not_null(int_05_btn, "Intensity 0.5 button should exist")
+	int_05_btn.pressed.emit()
+	assert_almost_eq(GameSettings.current().symptom_intensity, 0.5, 1e-4)
+
+	# Test Cycle Length 12d button
+	var cycle_12_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text == "Cycle Length 12d":
+			cycle_12_btn = child as Button
+			break
+	assert_not_null(cycle_12_btn, "Cycle Length 12d button should exist")
+	cycle_12_btn.pressed.emit()
+	assert_eq(GameSettings.current().cycle_length_days, 12)
+
+	GameSettings.reset_current()
+	GameClock.reset_state()
+	StatusManager.reset_state()
+	CycleManager.reset_state()

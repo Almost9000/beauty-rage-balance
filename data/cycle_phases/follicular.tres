@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="CyclePhaseData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/resources/cycle_phase_data.gd" id="1_phase"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="Resource_mod_health"]
+script = ExtResource("2_mod")
+stat = 1
+kind = 1
+value = 0.5
+source_id = &"cycle"
+duration_min = -1
+label = "Rising vitality"
+
+[sub_resource type="Resource" id="Resource_mod_sanity"]
+script = ExtResource("2_mod")
+stat = 0
+kind = 1
+value = 0.25
+source_id = &"cycle"
+duration_min = -1
+label = "Optimistic focus"
+
+; Placeholder values: to balance at M1 audit
+[resource]
+script = ExtResource("1_phase")
+phase = 1
+display_name = "CYCLE_PHASE_FOLLICULAR"
+default_days = 8
+length_days = Vector2i(6, 12)
+modifiers = Array[ExtResource("2_mod")]([SubResource("Resource_mod_health"), SubResource("Resource_mod_sanity")])
+symptom_tags = Array[StringName]([&"energy_boost", &"clear_focus"])
+narrative_tags = Array[StringName]([&"follicular", &"creative"])
+description = "Follicular phase: rising energy, mental clarity, and readiness for project momentum."
