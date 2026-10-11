@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="CyclePhaseData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/resources/cycle_phase_data.gd" id="1_phase"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="Resource_mod_rage"]
+script = ExtResource("2_mod")
+stat = 3
+kind = 2
+value = 1.3
+source_id = &"cycle"
+duration_min = -1
+label = "Luteal irritability"
+
+[sub_resource type="Resource" id="Resource_mod_sanity"]
+script = ExtResource("2_mod")
+stat = 0
+kind = 1
+value = -0.5
+source_id = &"cycle"
+duration_min = -1
+label = "Restless mental energy"
+
+; Placeholder values: to balance at M1 audit
+[resource]
+script = ExtResource("1_phase")
+phase = 3
+display_name = "CYCLE_PHASE_LUTEAL"
+default_days = 12
+length_days = Vector2i(10, 16)
+modifiers = Array[ExtResource("2_mod")]([SubResource("Resource_mod_rage"), SubResource("Resource_mod_sanity")])
+symptom_tags = Array[StringName]([&"restlessness", &"irritability", &"introspective"])
+narrative_tags = Array[StringName]([&"luteal", &"boundaries"])
+description = "Luteal phase: introspection and heightened boundary sensitivity; lower tolerance for bullshit."
