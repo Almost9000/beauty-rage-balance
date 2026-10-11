@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="FinanceConfig" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="1_modifier"]
+[ext_resource type="Script" path="res://core/resources/finance_config.gd" id="2_config"]
+
+[sub_resource type="Resource" id="Resource_debt"]
+script = ExtResource("1_modifier")
+stat = 0
+kind = 1
+value = -1.0
+source_id = &"finance_debt"
+duration_min = -1
+label = "Debt stress"
+
+[resource]
+script = ExtResource("2_config")
+starting_cents = 25000
+rent_cents = 60000
+rent_interval_days = 30
+first_rent_day = 30
+income_cents = 35000
+income_interval_days = 7
+debt_modifier = SubResource("Resource_debt")

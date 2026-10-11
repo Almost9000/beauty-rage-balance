@@ -24,6 +24,7 @@ func _ready() -> void:
 	_setup_time_section()
 	_setup_stats_section()
 	_setup_cycle_section()
+	_setup_money_section()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_toggle"):
@@ -238,6 +239,39 @@ func _set_debug_intensity(val: float) -> void:
 
 func _set_debug_cycle_length(days: int) -> void:
 	GameSettings.current().cycle_length_days = days
+
+func _setup_money_section() -> void:
+	var money_section: Container = add_section("Money")
+	add_watch(money_section, "Wallet", _get_debug_wallet_string)
+	add_button(money_section, "+€100", _on_add_100_pressed)
+	add_button(money_section, "−€100 (Bill)", _on_sub_100_bill_pressed)
+	add_button(money_section, "Charge Rent Now", _on_charge_rent_pressed)
+
+func _get_finance_manager() -> Node:
+	return get_node_or_null("/root/FinanceManager")
+
+func _get_debug_wallet_string() -> String:
+	var fm: Node = _get_finance_manager()
+	if fm:
+		var c_val: Variant = fm.get("wallet_cents")
+		if c_val != null:
+			return Money.format(int(c_val))
+	return "--"
+
+func _on_add_100_pressed() -> void:
+	var fm: Node = _get_finance_manager()
+	if fm and fm.has_method("earn"):
+		fm.call("earn", 10000, &"debug", "Debug +€100")
+
+func _on_sub_100_bill_pressed() -> void:
+	var fm: Node = _get_finance_manager()
+	if fm and fm.has_method("charge_bill"):
+		fm.call("charge_bill", 10000, &"debug", "Debug −€100")
+
+func _on_charge_rent_pressed() -> void:
+	var fm: Node = _get_finance_manager()
+	if fm and fm.has_method("charge_rent"):
+		fm.call("charge_rent")
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

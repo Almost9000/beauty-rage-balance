@@ -210,3 +210,84 @@ func test_debug_panel_cycle_section() -> void:
 	GameClock.reset_state()
 	StatusManager.reset_state()
 	CycleManager.reset_state()
+
+func test_debug_panel_money_section() -> void:
+	GameSettings.reset_current()
+	GameClock.reset_state()
+	StatusManager.reset_state()
+	FinanceManager.reset_state()
+
+	var panel: CanvasLayer = load("res://ui/debug/debug_panel.tscn").instantiate()
+	add_child_autoqfree(panel)
+
+	panel.toggle_panel()
+
+	var sections_container: Node = panel.get_node("PanelRoot/MarginContainer/VBoxContainer/ScrollContainer/SectionsContainer")
+	assert_not_null(sections_container)
+
+	var money_section_node: Node = sections_container.get_node_or_null("Money")
+	assert_not_null(money_section_node, "Money section should exist in DebugPanel")
+
+	var items: Container = money_section_node.get_node_or_null("Items") as Container
+	assert_not_null(items)
+
+	# Initial wallet is 25000 (€250.00)
+	assert_eq(FinanceManager.wallet_cents, 25000)
+
+	# Find buttons
+	var add_100_btn: Button = null
+	var sub_100_btn: Button = null
+	var charge_rent_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button:
+			var btn: Button = child as Button
+			if btn.text == "+€100":
+				add_100_btn = btn
+			elif btn.text == "−€100 (Bill)":
+				sub_100_btn = btn
+			elif btn.text == "Charge Rent Now":
+				charge_rent_btn = btn
+
+	assert_not_null(add_100_btn, "+€100 button should exist")
+	assert_not_null(sub_100_btn, "−€100 (Bill) button should exist")
+	assert_not_null(charge_rent_btn, "Charge Rent Now button should exist")
+
+	# Test +€100 button
+	add_100_btn.pressed.emit()
+	assert_eq(FinanceManager.wallet_cents, 35000)
+
+	# Test −€100 (Bill) button 4 times: 35000 -> 25000 -> 15000 -> 5000 -> -5000
+	sub_100_btn.pressed.emit()
+	sub_100_btn.pressed.emit()
+	sub_100_btn.pressed.emit()
+	sub_100_btn.pressed.emit()
+	assert_eq(FinanceManager.wallet_cents, -5000)
+
+	# Verify debt modifier is active in StatusManager
+	var debt_mod_found: bool = false
+	for m: StatModifier in StatusManager.get_modifiers(int(Enums.Stat.SANITY)):
+		if m.source_id == &"finance_debt":
+			debt_mod_found = true
+			break
+	assert_true(debt_mod_found, "Debt modifier should be active when wallet is negative")
+
+	# Test Charge Rent Now button: -5000 - 60000 = -65000
+	charge_rent_btn.pressed.emit()
+	assert_eq(FinanceManager.wallet_cents, -65000)
+
+	# Earn back to positive
+	FinanceManager.earn(70000, &"debug", "Clear debt")
+	assert_eq(FinanceManager.wallet_cents, 5000)
+
+	var debt_mod_still_found: bool = false
+	for m: StatModifier in StatusManager.get_modifiers(int(Enums.Stat.SANITY)):
+		if m.source_id == &"finance_debt":
+			debt_mod_still_found = true
+			break
+	assert_false(debt_mod_still_found, "Debt modifier should be removed once wallet is >= 0")
+
+	GameSettings.reset_current()
+	GameClock.reset_state()
+	StatusManager.reset_state()
+	FinanceManager.reset_state()
+
