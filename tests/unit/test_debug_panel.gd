@@ -72,6 +72,26 @@ func test_debug_panel_time_section() -> void:
 	skip_1d_btn.pressed.emit()
 	assert_eq(GameClock.now_minutes, 480 + 1440)
 
+	# Test +7 d button
+	var skip_7d_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("+7 d"):
+			skip_7d_btn = child as Button
+			break
+	assert_not_null(skip_7d_btn, "+7 d button should exist")
+	skip_7d_btn.pressed.emit()
+	assert_eq(GameClock.now_minutes, 480 + 1440 + 7 * 1440)
+
+	# Test +28 d button
+	var skip_28d_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button and (child as Button).text.begins_with("+28 d"):
+			skip_28d_btn = child as Button
+			break
+	assert_not_null(skip_28d_btn, "+28 d button should exist")
+	skip_28d_btn.pressed.emit()
+	assert_eq(GameClock.now_minutes, 480 + 1440 + 7 * 1440 + 28 * 1440)
+
 	# Test toggle pause button
 	var pause_btn: Button = null
 	for child: Node in items.get_children():
@@ -115,13 +135,28 @@ func test_debug_panel_stats_section() -> void:
 
 	# Test Sanity = 50 button
 	var set_sanity_btn: Button = null
+	var set_sanity_100_btn: Button = null
+	var set_rage_0_btn: Button = null
 	for child: Node in items.get_children():
-		if child is Button and (child as Button).text == "Sanity = 50":
-			set_sanity_btn = child as Button
-			break
+		if child is Button:
+			var btn: Button = child as Button
+			if btn.text == "Sanity = 50":
+				set_sanity_btn = btn
+			elif btn.text == "Sanity = 100":
+				set_sanity_100_btn = btn
+			elif btn.text == "Rage = 0":
+				set_rage_0_btn = btn
 	assert_not_null(set_sanity_btn, "Sanity = 50 button should exist")
 	set_sanity_btn.pressed.emit()
 	assert_eq(StatusManager.get_value(Enums.Stat.SANITY), 50.0)
+
+	assert_not_null(set_sanity_100_btn, "Sanity = 100 button should exist")
+	set_sanity_100_btn.pressed.emit()
+	assert_eq(StatusManager.get_value(Enums.Stat.SANITY), 100.0)
+
+	assert_not_null(set_rage_0_btn, "Rage = 0 button should exist")
+	set_rage_0_btn.pressed.emit()
+	assert_eq(StatusManager.get_value(Enums.Stat.RAGE), 0.0)
 
 	# Test Add Test +5/h modifier button
 	var initial_rate: float = StatusManager.get_effective_rate(Enums.Stat.SANITY)
@@ -237,6 +272,8 @@ func test_debug_panel_money_section() -> void:
 	# Find buttons
 	var add_100_btn: Button = null
 	var sub_100_btn: Button = null
+	var add_500_btn: Button = null
+	var sub_500_btn: Button = null
 	var charge_rent_btn: Button = null
 	for child: Node in items.get_children():
 		if child is Button:
@@ -245,11 +282,17 @@ func test_debug_panel_money_section() -> void:
 				add_100_btn = btn
 			elif btn.text == "−€100 (Bill)":
 				sub_100_btn = btn
+			elif btn.text == "+€500":
+				add_500_btn = btn
+			elif btn.text == "−€500 (Bill)":
+				sub_500_btn = btn
 			elif btn.text == "Charge Rent Now":
 				charge_rent_btn = btn
 
 	assert_not_null(add_100_btn, "+€100 button should exist")
 	assert_not_null(sub_100_btn, "−€100 (Bill) button should exist")
+	assert_not_null(add_500_btn, "+€500 button should exist")
+	assert_not_null(sub_500_btn, "−€500 (Bill) button should exist")
 	assert_not_null(charge_rent_btn, "Charge Rent Now button should exist")
 
 	# Test +€100 button

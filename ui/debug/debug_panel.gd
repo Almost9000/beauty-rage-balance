@@ -25,6 +25,10 @@ func _ready() -> void:
 	_setup_stats_section()
 	_setup_cycle_section()
 	_setup_money_section()
+	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
+
+var _capture_path: String = ""
+var _capture_frame: int = 0
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_toggle"):
@@ -37,6 +41,38 @@ func toggle_panel() -> void:
 		_refresh_watches()
 
 func _process(delta: float) -> void:
+	if not _capture_path.is_empty():
+		var router: Node = get_node_or_null("/root/SceneRouter")
+		if router and bool(router.get("_is_transitioning")):
+			return
+
+		_capture_frame += 1
+		if _capture_frame == 1:
+			var res_env: String = OS.get_environment("BRB_RESOLUTION")
+			if not res_env.is_empty():
+				var parts: PackedStringArray = res_env.split("x")
+				if parts.size() == 2:
+					var target_size: Vector2i = Vector2i(int(parts[0]), int(parts[1]))
+					DisplayServer.window_set_size(target_size)
+					get_viewport().size = target_size
+
+		if _capture_frame == 5:
+			if OS.get_environment("BRB_EXPAND_MODIFIERS") == "1":
+				var hud: Node = get_tree().root.find_child("HUD", true, false)
+				if hud and hud.has_method("set_modifiers_expanded"):
+					hud.call("set_modifiers_expanded", true)
+
+		if _capture_frame >= 20:
+			var vp: Viewport = get_viewport()
+			if vp:
+				var img: Image = vp.get_texture().get_image()
+				if img and not img.is_empty():
+					img.save_png(_capture_path)
+					print("Saved automated screenshot to: ", _capture_path, " size: ", img.get_size())
+			_capture_path = ""
+			get_tree().quit()
+			return
+
 	if not _panel_root.visible:
 		return
 
@@ -76,6 +112,8 @@ func _setup_time_section() -> void:
 	add_watch(time_section, "Time Scale", _get_debug_scale_string)
 	add_button(time_section, "+1 h (Skip)", _on_skip_one_hour_pressed)
 	add_button(time_section, "+1 d (Skip)", _on_skip_one_day_pressed)
+	add_button(time_section, "+7 d (Skip)", _on_skip_seven_days_pressed)
+	add_button(time_section, "+28 d (Skip)", _on_skip_twenty_eight_days_pressed)
 	add_button(time_section, "Pause / Resume", _on_toggle_pause_pressed)
 	add_button(time_section, "Scale x1", func() -> void: _set_time_scale(1.0))
 	add_button(time_section, "Scale x10", func() -> void: _set_time_scale(10.0))
@@ -112,6 +150,16 @@ func _on_skip_one_day_pressed() -> void:
 	if clock and clock.has_method("skip"):
 		clock.skip(1440)
 
+func _on_skip_seven_days_pressed() -> void:
+	var clock: Node = _get_game_clock()
+	if clock and clock.has_method("skip"):
+		clock.skip(7 * 1440)
+
+func _on_skip_twenty_eight_days_pressed() -> void:
+	var clock: Node = _get_game_clock()
+	if clock and clock.has_method("skip"):
+		clock.skip(28 * 1440)
+
 func _on_toggle_pause_pressed() -> void:
 	var clock: Node = _get_game_clock()
 	if clock and clock.has_method("has_pause_reason"):
@@ -135,6 +183,11 @@ func _setup_stats_section() -> void:
 	add_button(stats_section, "Health = 50", func() -> void: _set_debug_stat(Enums.Stat.HEALTH, 50.0))
 	add_button(stats_section, "Hygiene = 50", func() -> void: _set_debug_stat(Enums.Stat.HYGIENE, 50.0))
 	add_button(stats_section, "Rage = 50", func() -> void: _set_debug_stat(Enums.Stat.RAGE, 50.0))
+	add_button(stats_section, "Sanity = 100", func() -> void: _set_debug_stat(Enums.Stat.SANITY, 100.0))
+	add_button(stats_section, "Health = 100", func() -> void: _set_debug_stat(Enums.Stat.HEALTH, 100.0))
+	add_button(stats_section, "Hygiene = 100", func() -> void: _set_debug_stat(Enums.Stat.HYGIENE, 100.0))
+	add_button(stats_section, "Rage = 0", func() -> void: _set_debug_stat(Enums.Stat.RAGE, 0.0))
+	add_button(stats_section, "Rage = 100", func() -> void: _set_debug_stat(Enums.Stat.RAGE, 100.0))
 	add_button(stats_section, "Add Test +5/h (Sanity)", _on_add_test_pos_mod_pressed)
 	add_button(stats_section, "Add Test -5/h (Sanity)", _on_add_test_neg_mod_pressed)
 	add_button(stats_section, "Clear Test Modifiers", _on_clear_test_mods_pressed)
@@ -245,6 +298,8 @@ func _setup_money_section() -> void:
 	add_watch(money_section, "Wallet", _get_debug_wallet_string)
 	add_button(money_section, "+€100", _on_add_100_pressed)
 	add_button(money_section, "−€100 (Bill)", _on_sub_100_bill_pressed)
+	add_button(money_section, "+€500", _on_add_500_pressed)
+	add_button(money_section, "−€500 (Bill)", _on_sub_500_bill_pressed)
 	add_button(money_section, "Charge Rent Now", _on_charge_rent_pressed)
 
 func _get_finance_manager() -> Node:
@@ -267,6 +322,16 @@ func _on_sub_100_bill_pressed() -> void:
 	var fm: Node = _get_finance_manager()
 	if fm and fm.has_method("charge_bill"):
 		fm.call("charge_bill", 10000, &"debug", "Debug −€100")
+
+func _on_add_500_pressed() -> void:
+	var fm: Node = _get_finance_manager()
+	if fm and fm.has_method("earn"):
+		fm.call("earn", 50000, &"debug", "Debug +€500")
+
+func _on_sub_500_bill_pressed() -> void:
+	var fm: Node = _get_finance_manager()
+	if fm and fm.has_method("charge_bill"):
+		fm.call("charge_bill", 50000, &"debug", "Debug −€500")
 
 func _on_charge_rent_pressed() -> void:
 	var fm: Node = _get_finance_manager()
