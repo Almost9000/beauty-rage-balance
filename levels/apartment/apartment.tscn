@@ -1,4 +1,4 @@
-[gd_scene load_steps=126 format=3]
+[gd_scene load_steps=128 format=3]
 
 [ext_resource type="Script" path="res://core/components/level_root.gd" id="1_rr8ky"]
 [ext_resource type="Material" path="res://assets/materials/wall.tres" id="2_k1ayl"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" path="res://core/components/interactable.gd" id="8_02syn"]
 [ext_resource type="PackedScene" path="res://features/player/player.tscn" id="9_noc1r"]
 [ext_resource type="Script" path="res://features/player/player_controller.gd" id="10_agbje"]
+[ext_resource type="PackedScene" path="res://features/wardrobe/closet.tscn" id="11_closet"]
+[ext_resource type="PackedScene" path="res://features/prep/shower.tscn" id="12_shower"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8qlm"]
 sky_top_color = Color(0.38, 0.55, 0.78, 1)
@@ -982,11 +984,15 @@ mesh = SubResource("BoxMesh_co11r")
 [node name="closet" type="Marker3D" parent="Stations"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.4, 0, -0.2)
 
+[node name="Closet" parent="Stations/closet" instance=ExtResource("11_closet")]
+
 [node name="vanity" type="Marker3D" parent="Stations"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -4.5)
 
 [node name="shower" type="Marker3D" parent="Stations"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.3, 0, 2.2)
+
+[node name="Shower" parent="Stations/shower" instance=ExtResource("12_shower")]
 
 [node name="bed" type="Marker3D" parent="Stations"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.3, 0, -3.2)

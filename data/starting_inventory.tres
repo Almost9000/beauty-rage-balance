@@ -1,12 +1,19 @@
-[gd_resource type="Resource" script_class="StartingInventory" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="StartingInventory" load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://core/resources/starting_inventory.gd" id="1_si"]
 [ext_resource type="Resource" path="res://data/clothing/top/top_peasant_tunic.tres" id="2_top"]
 [ext_resource type="Resource" path="res://data/clothing/bottom/bottom_peasant_skirt.tres" id="3_bot"]
 [ext_resource type="Resource" path="res://data/clothing/shoes/shoes_peasant_boots.tres" id="4_sho"]
 [ext_resource type="Resource" path="res://data/clothing/dress/dress_peasant_ensemble.tres" id="5_dre"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_chic_blouse.tres" id="6_top_chic"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_sporty_tee.tres" id="7_top_sporty"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_chic_trousers.tres" id="8_bot_chic"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_sporty_shorts.tres" id="9_bot_sporty"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_party_heels.tres" id="10_sho_party"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_sporty_sneakers.tres" id="11_sho_sporty"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_party_gown.tres" id="12_dre_party"]
 
 [resource]
 script = ExtResource("1_si")
-owned_clothing = [ExtResource("2_top"), ExtResource("3_bot"), ExtResource("4_sho"), ExtResource("5_dre")]
+owned_clothing = [ExtResource("2_top"), ExtResource("6_top_chic"), ExtResource("7_top_sporty"), ExtResource("3_bot"), ExtResource("8_bot_chic"), ExtResource("9_bot_sporty"), ExtResource("4_sho"), ExtResource("10_sho_party"), ExtResource("11_sho_sporty"), ExtResource("5_dre"), ExtResource("12_dre_party")]
 equipped_clothing = [ExtResource("2_top"), ExtResource("3_bot"), ExtResource("4_sho")]

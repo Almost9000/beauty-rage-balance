@@ -11,10 +11,17 @@ var equipped: Dictionary = {}  # Enums.Slot -> ClothingItem
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if not outfit_changed.is_connected(_on_outfit_changed):
+		outfit_changed.connect(_on_outfit_changed)
 	reset_state()
 
 
 func reset_state() -> void:
+	var sm: Node = get_node_or_null("/root/StatusManager")
+	if sm and sm.has_method("remove_by_source"):
+		for s in Enums.Slot.values():
+			sm.call("remove_by_source", get_slot_source_id(s))
+
 	owned_clothing.clear()
 	equipped.clear()
 
@@ -103,6 +110,11 @@ func to_dict() -> Dictionary:
 
 
 func from_dict(data: Dictionary, _version: int = 1) -> void:
+	var sm: Node = get_node_or_null("/root/StatusManager")
+	if sm and sm.has_method("remove_by_source"):
+		for s in Enums.Slot.values():
+			sm.call("remove_by_source", get_slot_source_id(s))
+
 	owned_clothing.clear()
 	equipped.clear()
 
@@ -121,3 +133,30 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 		if res is ClothingItem:
 			equipped[slot] = res as ClothingItem
 			outfit_changed.emit(slot, res as ClothingItem)
+
+
+func get_slot_source_id(slot: Enums.Slot) -> StringName:
+	var slot_name: String = ""
+	var keys: Array = Enums.Slot.keys()
+	if slot >= 0 and slot < keys.size():
+		slot_name = String(keys[slot]).to_lower()
+	else:
+		slot_name = str(slot).to_lower()
+	return StringName("outfit:" + slot_name)
+
+
+func _on_outfit_changed(slot: Enums.Slot, item: ClothingItem) -> void:
+	var sm: Node = get_node_or_null("/root/StatusManager")
+	if not sm:
+		return
+	var source_id: StringName = get_slot_source_id(slot)
+	if sm.has_method("remove_by_source"):
+		sm.call("remove_by_source", source_id)
+	if item != null and sm.has_method("add_modifier"):
+		for mod: StatModifier in item.modifiers:
+			if mod:
+				var mod_copy: StatModifier = mod.duplicate() as StatModifier
+				mod_copy.source_id = source_id
+				if mod_copy.label.is_empty():
+					mod_copy.label = item.display_name
+				sm.call("add_modifier", mod_copy)
