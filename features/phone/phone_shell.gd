@@ -61,6 +61,11 @@ func _ready() -> void:
 		if not clock.minute_ticked.is_connected(_on_clock_minute_ticked):
 			clock.minute_ticked.connect(_on_clock_minute_ticked)
 
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv and inv.has_signal("delivery_arrived"):
+		if not inv.delivery_arrived.is_connected(_on_delivery_arrived):
+			inv.delivery_arrived.connect(_on_delivery_arrived)
+
 	if slide_container:
 		slide_container.visible = false
 		slide_container.position.y = _get_offscreen_y()
@@ -108,6 +113,16 @@ func _setup_apps() -> void:
 				var dating: AppBase = dating_scene.instantiate() as AppBase
 				if dating:
 					register_app(dating)
+
+	# If shop app wasn't loaded from app_scenes, load default shop app
+	if not _installed_apps.has(&"shop"):
+		var shop_path := "res://features/phone/apps/shop/shop_app.tscn"
+		if ResourceLoader.exists(shop_path):
+			var shop_scene: PackedScene = load(shop_path) as PackedScene
+			if shop_scene:
+				var shop: AppBase = shop_scene.instantiate() as AppBase
+				if shop:
+					register_app(shop)
 
 	_refresh_home_screen()
 
@@ -278,6 +293,13 @@ func post_notification(title: String, body: String, app_id: StringName = &"") ->
 
 func _on_app_notification_posted(title: String, body: String, app_id: StringName) -> void:
 	post_notification(title, body, app_id)
+
+
+func _on_delivery_arrived(items: Array) -> void:
+	var count: int = items.size()
+	var item_word: String = "item" if count == 1 else "items"
+	post_notification("Package Delivered!", "Your order of %d %s has arrived." % [count, item_word], &"shop")
+
 
 
 func _on_home_app_selected(app_id: StringName) -> void:

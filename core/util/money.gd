@@ -17,6 +17,11 @@ static func format(cents: int) -> String:
 		return "%s%s%s.%s" % [MINUS_SIGN, CURRENCY_SYMBOL, whole_str, remainder_str]
 	return "%s%s.%s" % [CURRENCY_SYMBOL, whole_str, remainder_str]
 
+
+static func format_cents(cents: int) -> String:
+	return format(cents)
+
+
 static func _format_thousands(n: int) -> String:
 	var s: String = str(n)
 	var length: int = s.length()
