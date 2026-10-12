@@ -30,6 +30,7 @@ func _ready() -> void:
 	_setup_outings_section()
 	_setup_cleaning_section()
 	_setup_dogs_section()
+	_setup_narrative_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
 
 
@@ -851,6 +852,70 @@ func _debug_walk_dogs() -> void:
 		for d: Node in tree.get_nodes_in_group(&"dogs"):
 			if d is Dog:
 				d.walk()
+	_refresh_watches()
+
+
+func _setup_narrative_section() -> void:
+	var section: Container = add_section("Narrative")
+	add_watch(section, "Cooldown Left", func() -> String:
+		var nm: Node = get_node_or_null("/root/NarrativeManager")
+		if nm and nm.has_method("get_cooldown_remaining"):
+			return "%d min" % int(nm.call("get_cooldown_remaining"))
+		return "--"
+	)
+	add_watch(section, "Active Flags", func() -> String:
+		var nm: Node = get_node_or_null("/root/NarrativeManager")
+		if nm and nm.get("flags") != null:
+			var flags_dict: Dictionary = nm.get("flags") as Dictionary
+			if flags_dict.is_empty():
+				return "(none)"
+			var parts: PackedStringArray = []
+			for k: Variant in flags_dict:
+				parts.append("%s:%s" % [str(k), str(flags_dict[k])])
+			return ", ".join(parts)
+		return "--"
+	)
+	add_watch(section, "Fired Events", func() -> String:
+		var nm: Node = get_node_or_null("/root/NarrativeManager")
+		if nm and nm.get("fired_events") != null:
+			var fired: Array = nm.get("fired_events") as Array
+			return "%d fired" % fired.size()
+		return "--"
+	)
+
+	add_button(section, "Trigger: Family Marriage", func() -> void:
+		_debug_trigger_event(&"family_marriage")
+	)
+	add_button(section, "Trigger: Unsolicited Appearance", func() -> void:
+		_debug_trigger_event(&"unsolicited_appearance")
+	)
+	add_button(section, "Trigger: Work Day Off", func() -> void:
+		_debug_trigger_event(&"work_day_off")
+	)
+	add_button(section, "Trigger: Cycle Pressure", func() -> void:
+		_debug_trigger_event(&"cycle_pressure")
+	)
+	add_button(section, "Trigger: Follow-up Confrontation", func() -> void:
+		_debug_trigger_event(&"follow_up_confrontation")
+	)
+	add_button(section, "Reset Fired Events", func() -> void:
+		var nm: Node = get_node_or_null("/root/NarrativeManager")
+		if nm and nm.has_method("reset_fired_events"):
+			nm.call("reset_fired_events")
+		_refresh_watches()
+	)
+	add_button(section, "Reset Cooldown", func() -> void:
+		var nm: Node = get_node_or_null("/root/NarrativeManager")
+		if nm:
+			nm.set("last_event_minute", -9999)
+		_refresh_watches()
+	)
+
+
+func _debug_trigger_event(event_id: StringName) -> void:
+	var nm: Node = get_node_or_null("/root/NarrativeManager")
+	if nm and nm.has_method("trigger_event"):
+		nm.call("trigger_event", event_id)
 	_refresh_watches()
 
 

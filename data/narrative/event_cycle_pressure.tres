@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="NarrativeEvent" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://core/resources/narrative_event.gd" id="1_event"]
+[ext_resource type="Script" path="res://core/resources/narrative_condition.gd" id="2_cond"]
+[ext_resource type="Script" path="res://core/resources/narrative_choice.gd" id="3_choice"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="4_statmod"]
+
+[sub_resource type="Resource" id="Cond_1"]
+script = ExtResource("2_cond")
+kind = 1
+phase_tag = &"cramps"
+has_tag = true
+
+[sub_resource type="Resource" id="Mod_placate_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = 20.0
+source_id = &"narrative:cycle_pressure"
+label = "Resentment over ignored bodily needs"
+
+[sub_resource type="Resource" id="Mod_placate_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = -15.0
+source_id = &"narrative:cycle_pressure"
+label = "Exhaustion from masking pain"
+
+[sub_resource type="Resource" id="Choice_placate"]
+script = ExtResource("3_choice")
+stance = 0
+text = "Maybe you're right... give me forty minutes to pull myself together. I'll force myself to go."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_placate_rage"), SubResource("Mod_placate_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_deflect_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 5.0
+source_id = &"narrative:cycle_pressure"
+label = "Humorous boundary"
+
+[sub_resource type="Resource" id="Choice_deflect"]
+script = ExtResource("3_choice")
+stance = 1
+text = "My couch, heating pad, and herbal tea have already placed a non-refundable deposit on my evening."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_deflect_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_assert_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = -25.0
+source_id = &"narrative:cycle_pressure"
+label = "Rage channeled into self-protection"
+
+[sub_resource type="Resource" id="Mod_assert_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 20.0
+source_id = &"narrative:cycle_pressure"
+label = "Honored physical limits"
+
+[sub_resource type="Resource" id="Choice_assert"]
+script = ExtResource("3_choice")
+stance = 2
+text = "My body is dealing with real cramps and fatigue right now. Pressuring me to ignore my pain isn't being supportive. I am staying home."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_assert_rage"), SubResource("Mod_assert_sanity")])
+set_flags = {
+"self_respect": 1
+}
+
+[resource]
+script = ExtResource("1_event")
+id = &"cycle_pressure"
+conditions = Array[ExtResource("2_cond")]([SubResource("Cond_1")])
+once = true
+priority = 20
+channel = &"IN_PERSON"
+speaker = "Friend Chloe"
+lines = Array[String]([
+"Come on, you're really staying in? You promised we'd check out that new rooftop lounge tonight!",
+"Just take two ibuprofen, put on some eyeliner, and rally. You always say you're tired, but you'll have fun once the music starts!"
+])
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_placate"), SubResource("Choice_deflect"), SubResource("Choice_assert")])

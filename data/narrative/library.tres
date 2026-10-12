@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="NarrativeLibrary" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://core/resources/narrative_library.gd" id="1_lib"]
+[ext_resource type="Resource" path="res://data/narrative/event_family_marriage.tres" id="2_marriage"]
+[ext_resource type="Resource" path="res://data/narrative/event_unsolicited_appearance.tres" id="3_appearance"]
+[ext_resource type="Resource" path="res://data/narrative/event_work_day_off.tres" id="4_work"]
+[ext_resource type="Resource" path="res://data/narrative/event_cycle_pressure.tres" id="5_cycle"]
+[ext_resource type="Resource" path="res://data/narrative/event_follow_up_confrontation.tres" id="6_followup"]
+
+[resource]
+script = ExtResource("1_lib")
+events = Array[Resource]([
+ExtResource("2_marriage"),
+ExtResource("3_appearance"),
+ExtResource("4_work"),
+ExtResource("5_cycle"),
+ExtResource("6_followup")
+])

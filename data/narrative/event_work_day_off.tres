@@ -1,0 +1,102 @@
+[gd_resource type="Resource" script_class="NarrativeEvent" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://core/resources/narrative_event.gd" id="1_event"]
+[ext_resource type="Script" path="res://core/resources/narrative_condition.gd" id="2_cond"]
+[ext_resource type="Script" path="res://core/resources/narrative_choice.gd" id="3_choice"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="4_statmod"]
+[ext_resource type="Resource" path="res://data/narrative/event_follow_up_confrontation.tres" id="5_followup"]
+
+[sub_resource type="Resource" id="Cond_1"]
+script = ExtResource("2_cond")
+kind = 0
+min_day = 1
+max_day = 9999
+
+[sub_resource type="Resource" id="Mod_placate_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = 25.0
+source_id = &"narrative:work_day_off"
+label = "Resentment over stolen weekend"
+
+[sub_resource type="Resource" id="Mod_placate_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = -20.0
+source_id = &"narrative:work_day_off"
+label = "Caved to workplace pressure"
+
+[sub_resource type="Resource" id="Choice_placate"]
+script = ExtResource("3_choice")
+stance = 0
+text = "Alright, I suppose I can boot up my laptop for a couple hours. Email me the files."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_placate_rage"), SubResource("Mod_placate_sanity")])
+set_flags = {
+"work_accommodated": 1
+}
+
+[sub_resource type="Resource" id="Mod_deflect_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = 5.0
+source_id = &"narrative:work_day_off"
+label = "Simmering annoyance"
+
+[sub_resource type="Resource" id="Mod_deflect_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 5.0
+source_id = &"narrative:work_day_off"
+label = "Dodged the task"
+
+[sub_resource type="Resource" id="Choice_deflect"]
+script = ExtResource("3_choice")
+stance = 1
+text = "I'm away from home without my laptop today, so I won't be able to open the deck until tomorrow."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_deflect_rage"), SubResource("Mod_deflect_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_assert_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = -30.0
+source_id = &"narrative:work_day_off"
+label = "Rage channeled into self-protection"
+
+[sub_resource type="Resource" id="Mod_assert_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 20.0
+source_id = &"narrative:work_day_off"
+label = "Preserved personal time"
+
+[sub_resource type="Resource" id="Choice_assert"]
+script = ExtResource("3_choice")
+stance = 2
+text = "Today is my scheduled rest day, Dan. Poor planning on the client's end is not an emergency on my day off. I'll review it tomorrow morning."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_assert_rage"), SubResource("Mod_assert_sanity")])
+set_flags = {
+"self_respect": 1,
+"work_boundary_set": 1
+}
+follow_up = ExtResource("5_followup")
+
+[resource]
+script = ExtResource("1_event")
+id = &"work_day_off"
+conditions = Array[ExtResource("2_cond")]([SubResource("Cond_1")])
+once = true
+priority = 15
+channel = &"PHONE_CALL"
+speaker = "Supervisor Dan"
+lines = Array[String]([
+"Hey, sorry to bother you on your scheduled day off, but the client moved the presentation up to tomorrow 9 AM.",
+"Can you jump online for two or three hours to reformat the slide deck? It's an emergency and the team really needs you."
+])
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_placate"), SubResource("Choice_deflect"), SubResource("Choice_assert")])

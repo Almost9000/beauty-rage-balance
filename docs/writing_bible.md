@@ -49,7 +49,54 @@
 
 ---
 
-## 3. Review & Escalation
+## 3. Stance Guidelines
+
+Social-pressure narrative events present the protagonist with three core stances:
+
+### 1. Placate (Muted Teal / Cyan)
+- **Mindset**: Swallowing discomfort, prioritizing social harmony, or bowing to guilt/obligation to appease family, coworkers, or acquaintances.
+- **Tone**: Apologetic, accommodating, weary compliance ("I know, Aunt Mira... I haven't given up.", "I guess I can boot up my laptop for a couple hours...").
+- **Mechanical Consequence**:
+  - Internal friction accumulates: **Rage builds** (Instant positive delta).
+  - Emotional energy depletes: **Sanity drops** (Instant negative delta).
+  - No `self_respect` gained.
+
+### 2. Deflect (Amber / Warm Yellow)
+- **Mindset**: Diffusing tension, pivoting the topic, or using wry humor and practical excuses to avoid direct conflict without submitting.
+- **Tone**: Dry, witty, evasive, gently ironic ("Did Mom show you photos of my rescue dogs instead? Maja and Čipa are plenty of commitment.", "That's just my actual human face under fluorescent lighting.").
+- **Mechanical Consequence**:
+  - Low friction: Neutral or modest **Sanity gain** (+5 to +10).
+  - Minor or no Rage change.
+  - Safe middle ground that protects immediate peace without setting permanent boundaries.
+
+### 3. Assert (Bold Magenta / Crimson)
+- **Mindset**: Explicitly articulating boundaries, rejecting unsolicited expectations, and protecting bodily and emotional sovereignty.
+- **Tone**: Grounded, firm, respectful but uncompromising ("My life is whole and fulfilling as it is, Aunt Mira. Please stop treating marriage like the only measure of my happiness.", "My body needs rest tonight, and I'm listening to it.").
+- **Mechanical Consequence**:
+  - Turns indignation into empowerment: **Rage spends down** (Instant negative delta, e.g. -20 to -30).
+  - Restores internal alignment: **Sanity rises** (Instant positive delta, e.g. +15 to +25).
+  - Earns lasting boundary equity: **Increments flag `self_respect`** (+1).
+  - Triggers the visual screen flash and impact shake (`RageReleaseFx`).
+
+---
+
+## 4. Narrative Event Authoring Checklist
+
+When authoring a new `NarrativeEvent` resource:
+1. **Grounded Conflict**: Is the situation rooted in real-world friction (familial expectations, appearance commentary, workplace boundaries, physical fatigue)?
+2. **Channel Authenticity**: Does the channel (`PHONE_CALL` vs `IN_PERSON`) fit the dramatic context?
+3. **Pacing & Lines**: Are lines broken into digestible beats (1–3 sentences per page) that read naturally when spoken aloud?
+4. **Three Clear Stances**: Does the event provide distinct `PLACATE`, `DEFLECT`, and `ASSERT` choices?
+5. **Assert Economy**:
+   - Does Assert drop Rage, increase Sanity, and increment `self_respect`?
+   - Does Placate increase Rage and decrease Sanity?
+   - Does Deflect provide a mild buffer?
+6. **Condition Precision**: Are triggers constrained cleanly via `NarrativeCondition` (day range, cycle phase tags, stat thresholds, level location, flags)?
+7. **Chain & Follow-up**: If an Assert stance transforms the relationship or sets a precedent, is a follow-up event or flag linked (e.g. `work_boundary_set` leading to `event_follow_up_confrontation`)?
+
+---
+
+## 5. Review & Escalation
 
 - Any writer or designer introducing new cycle phase descriptions, dialogue triggers, or symptoms must review against these principles.
 - If unsure about the authenticity or tone of specific symptom text, keep the phrasing neutral and flag it for sensitivity review prior to milestone approval.

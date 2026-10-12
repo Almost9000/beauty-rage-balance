@@ -1,0 +1,100 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Theme" path="res://ui/theme/brb_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://features/narrative/dialogue_box.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://features/narrative/rage_release_fx.tscn" id="3_ragefx"]
+
+[node name="DialogueBox" type="CanvasLayer"]
+layer = 25
+script = ExtResource("2_script")
+
+[node name="RootControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Backdrop" type="ColorRect" parent="RootControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.05, 0.08, 0.5)
+
+[node name="PanelCenter" type="PanelContainer" parent="RootControl"]
+custom_minimum_size = Vector2(760, 240)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = -290.0
+offset_right = 380.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="RootControl/PanelCenter"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
+
+[node name="VBox" type="VBoxContainer" parent="RootControl/PanelCenter/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderHBox" type="HBoxContainer" parent="RootControl/PanelCenter/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="SpeakerLabel" type="Label" parent="RootControl/PanelCenter/MarginContainer/VBox/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Speaker Name"
+
+[node name="ChannelBadge" type="Label" parent="RootControl/PanelCenter/MarginContainer/VBox/HeaderHBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[ PHONE CALL ]"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="RootControl/PanelCenter/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="LineLabel" type="Label" parent="RootControl/PanelCenter/MarginContainer/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 15
+text = "Dialogue line content appears here..."
+autowrap_mode = 2
+
+[node name="FooterHBox" type="HBoxContainer" parent="RootControl/PanelCenter/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="PageLabel" type="Label" parent="RootControl/PanelCenter/MarginContainer/VBox/FooterHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.65, 0.65, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "1 / 1"
+
+[node name="NextButton" type="Button" parent="RootControl/PanelCenter/MarginContainer/VBox/FooterHBox"]
+custom_minimum_size = Vector2(100, 32)
+layout_mode = 2
+text = "Next >"
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="RootControl/PanelCenter/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RageReleaseFx" parent="." instance=ExtResource("3_ragefx")]

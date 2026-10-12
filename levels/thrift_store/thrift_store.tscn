@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://features/thrift/checkout_counter.tscn" id="8_counter"]
 [ext_resource type="PackedScene" path="res://features/player/player.tscn" id="9_player"]
 [ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="10_hud"]
+[ext_resource type="PackedScene" path="res://features/narrative/dialogue_box.tscn" id="11_dialogue"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_thrift"]
 sky_top_color = Color(0.4, 0.45, 0.55, 1)
@@ -179,6 +180,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 2.8)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8)
 
 [node name="HUD" parent="." instance=ExtResource("10_hud")]
+ 
+[node name="DialogueBox" parent="." instance=ExtResource("11_dialogue")]
 
 [node name="ClosingBannerCanvas" type="CanvasLayer" parent="."]
 layer = 30
