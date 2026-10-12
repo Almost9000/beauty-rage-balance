@@ -28,6 +28,7 @@ const PHASE_NAMES: Dictionary = {
 @onready var modifiers_title_label: Label = $RootControl/TopRightContainer/RightVBox/PhaseContainer/ModifiersPanel/VBox/ModifiersTitleLabel
 @onready var modifiers_list: VBoxContainer = $RootControl/TopRightContainer/RightVBox/PhaseContainer/ModifiersPanel/VBox/ModifiersList
 @onready var prep_checklist_ui: PrepChecklistUI = get_node_or_null("RootControl/TopRightContainer/RightVBox/PrepChecklistUI") as PrepChecklistUI
+@onready var late_banner: PanelContainer = get_node_or_null("RootControl/LateBanner") as PanelContainer
 
 var _modifiers_expanded: bool = false
 
@@ -46,6 +47,7 @@ func _ready() -> void:
 	_update_all_stats(false)
 	_update_phase_badge()
 	_update_modifiers_list()
+	_update_late_banner()
 
 func _connect_signals() -> void:
 	var clock: Node = get_node_or_null("/root/GameClock")
@@ -73,6 +75,17 @@ func _connect_signals() -> void:
 	if cm:
 		if not cm.is_connected("phase_changed", _on_phase_changed):
 			cm.connect("phase_changed", _on_phase_changed)
+
+	var om: Node = get_node_or_null("/root/OutingManager")
+	if om:
+		if not om.is_connected("departure_deadline_reached", _on_departure_deadline_reached):
+			om.connect("departure_deadline_reached", _on_departure_deadline_reached)
+		if not om.is_connected("outing_departed", _on_outing_ended):
+			om.connect("outing_departed", _on_outing_ended)
+		if not om.is_connected("outing_missed", _on_outing_ended):
+			om.connect("outing_missed", _on_outing_ended)
+		if not om.is_connected("prep_started", _on_prep_started):
+			om.connect("prep_started", _on_prep_started)
 
 func toggle_modifiers_expanded() -> void:
 	set_modifiers_expanded(not _modifiers_expanded)
@@ -115,11 +128,34 @@ func get_wallet_text() -> String:
 func get_phase_badge_text() -> String:
 	return phase_button.text if phase_button else ""
 
+func is_late_banner_visible() -> bool:
+	return late_banner.visible if late_banner else false
+
+func _update_late_banner() -> void:
+	if not late_banner:
+		return
+	var om: Node = get_node_or_null("/root/OutingManager")
+	if om and bool(om.call("is_prep_active")) and bool(om.call("is_late")):
+		late_banner.visible = true
+	else:
+		late_banner.visible = false
+
+func _on_departure_deadline_reached(_outing: OutingData = null) -> void:
+	_update_late_banner()
+
+func _on_outing_ended(_outing: OutingData = null, _arg2 = null, _arg3 = null) -> void:
+	_update_late_banner()
+
+func _on_prep_started(_outing: OutingData = null) -> void:
+	_update_late_banner()
+
 func _on_clock_minute_ticked(_minute: int) -> void:
 	_update_clock()
+	_update_late_banner()
 
 func _on_clock_time_skipped(_from_minute: int, _to_minute: int) -> void:
 	_update_clock()
+	_update_late_banner()
 
 func _on_clock_day_started(_day: int) -> void:
 	_update_clock()

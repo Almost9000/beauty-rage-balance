@@ -174,6 +174,11 @@ func resume(reason: StringName) -> void:
 	var now_paused: bool = is_paused()
 	if was_paused and not now_paused:
 		paused_changed.emit(false)
+func push_pause(reason: StringName) -> void:
+	pause(reason)
+
+func pop_pause(reason: StringName) -> void:
+	resume(reason)
 
 func is_paused() -> bool:
 	return not _pause_reasons.is_empty()

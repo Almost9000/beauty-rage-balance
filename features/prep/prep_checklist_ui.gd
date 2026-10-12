@@ -2,7 +2,9 @@ class_name PrepChecklistUI
 extends PanelContainer
 
 @onready var title_label: Label = $VBox/TitleLabel
+@onready var prefix_label: Label = get_node_or_null("VBox/CountdownHBox/PrefixLabel") as Label
 @onready var countdown_label: CountdownLabel = $VBox/CountdownHBox/CountdownLabel
+@onready var late_banner: Control = get_node_or_null("VBox/LateBanner") as Control
 @onready var checklist_container: VBoxContainer = $VBox/ChecklistVBox
 
 
@@ -18,6 +20,10 @@ func _connect_signals() -> void:
 			om.connect("prep_started", _on_prep_started)
 		if not om.is_connected("departure_deadline_reached", _on_departure_deadline_reached):
 			om.connect("departure_deadline_reached", _on_departure_deadline_reached)
+		if not om.is_connected("outing_departed", _on_outing_ended):
+			om.connect("outing_departed", _on_outing_ended)
+		if not om.is_connected("outing_missed", _on_outing_ended):
+			om.connect("outing_missed", _on_outing_ended)
 
 	var clock: Node = get_node_or_null("/root/GameClock")
 	if clock:
@@ -50,9 +56,22 @@ func refresh() -> void:
 	if active_out != null and title_label != null:
 		title_label.text = active_out.display_name.to_upper() + " PREP"
 
-	if countdown_label != null:
-		countdown_label.set_countdown_id(&"outing_departure_deadline")
-		countdown_label.update_display()
+	var is_late: bool = bool(om.call("is_late")) if om.has_method("is_late") else false
+	if late_banner != null:
+		late_banner.visible = is_late
+
+	if is_late:
+		if prefix_label:
+			prefix_label.text = "Grace expires in:"
+		if countdown_label != null:
+			countdown_label.set_countdown_id(&"outing_late_grace_deadline")
+			countdown_label.update_display()
+	else:
+		if prefix_label:
+			prefix_label.text = "Departing in:"
+		if countdown_label != null:
+			countdown_label.set_countdown_id(&"outing_departure_deadline")
+			countdown_label.update_display()
 
 	if checklist_container == null:
 		return
@@ -120,3 +139,7 @@ func _on_outfit_changed(_slot: Enums.Slot, _item: ClothingItem) -> void:
 func _on_look_changed(_look: MakeupLook) -> void:
 	if visible:
 		refresh()
+
+
+func _on_outing_ended(_outing: OutingData = null) -> void:
+	refresh()

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="OutingData" load_steps=9 format=3]
+[gd_resource type="Resource" script_class="OutingData" load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://core/resources/outing_data.gd" id="1_outing"]
 [ext_resource type="Script" path="res://core/resources/prep_checks/hygiene_check.gd" id="2_hyg"]
@@ -37,15 +37,41 @@ cost_cents = 3000
 weight = 1.0
 label = "Brunch Budget (€30)"
 pass_threshold = 1.0
-
 [sub_resource type="Resource" id="SubResource_pass_mod"]
 script = ExtResource("6_statmod")
 stat = 0
 kind = 0
 value = 20.0
 duration_min = -1
-source_id = &"outing_girls_day_out_pass"
+source_id = &"outing:girls_day_out"
 label = "Great brunch with friends"
+
+[sub_resource type="Resource" id="SubResource_pass_rate_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 1
+value = 0.05
+duration_min = 720
+source_id = &"outing:girls_day_out"
+label = "Social recharge"
+
+[sub_resource type="Resource" id="SubResource_partial_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 0
+value = 5.0
+duration_min = -1
+source_id = &"outing:girls_day_out"
+label = "Decent brunch with friends"
+
+[sub_resource type="Resource" id="SubResource_partial_rate_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 1
+value = 0.02
+duration_min = 360
+source_id = &"outing:girls_day_out"
+label = "Pleasant brunch vibes"
 
 [sub_resource type="Resource" id="SubResource_fail_mod"]
 script = ExtResource("6_statmod")
@@ -53,8 +79,17 @@ stat = 0
 kind = 0
 value = -15.0
 duration_min = -1
-source_id = &"outing_girls_day_out_fail"
+source_id = &"outing:girls_day_out"
 label = "Awkward brunch"
+
+[sub_resource type="Resource" id="SubResource_fail_rate_mod"]
+script = ExtResource("6_statmod")
+stat = 3
+kind = 1
+value = 0.05
+duration_min = 360
+source_id = &"outing:girls_day_out"
+label = "Brunch awkwardness"
 
 [resource]
 script = ExtResource("1_outing")
@@ -68,8 +103,10 @@ cost_cents = 3000
 checks = [SubResource("SubResource_hyg"), SubResource("SubResource_dress"), SubResource("SubResource_mkup"), SubResource("SubResource_wall")]
 pass_threshold = 0.75
 partial_threshold = 0.4
-pass_modifiers = [SubResource("SubResource_pass_mod")]
-fail_modifiers = [SubResource("SubResource_fail_mod")]
+late_penalty_per_10_min = 0.1
+pass_modifiers = [SubResource("SubResource_pass_mod"), SubResource("SubResource_pass_rate_mod")]
+partial_modifiers = [SubResource("SubResource_partial_mod"), SubResource("SubResource_partial_rate_mod")]
+fail_modifiers = [SubResource("SubResource_fail_mod"), SubResource("SubResource_fail_rate_mod")]
 pass_affinity_delta = 15
 partial_affinity_delta = 5
 fail_affinity_delta = -10

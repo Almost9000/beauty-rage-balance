@@ -11,6 +11,7 @@ extends Resource
 @export var checks: Array[PrepCheck] = []
 @export_range(0.0, 1.0, 0.01) var pass_threshold: float = 0.75
 @export_range(0.0, 1.0, 0.01) var partial_threshold: float = 0.4
+@export var late_penalty_per_10_min: float = 0.1
 
 @export var pass_modifiers: Array[StatModifier] = []
 @export var partial_modifiers: Array[StatModifier] = []

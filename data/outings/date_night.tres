@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="OutingData" load_steps=9 format=3]
+[gd_resource type="Resource" script_class="OutingData" load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://core/resources/outing_data.gd" id="1_outing"]
 [ext_resource type="Script" path="res://core/resources/prep_checks/hygiene_check.gd" id="2_hyg"]
@@ -44,8 +44,35 @@ stat = 0
 kind = 0
 value = 25.0
 duration_min = -1
-source_id = &"outing_date_night_pass"
+source_id = &"outing:date_night"
 label = "Romantic evening"
+
+[sub_resource type="Resource" id="SubResource_pass_rate_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 1
+value = 0.08
+duration_min = 720
+source_id = &"outing:date_night"
+label = "Romantic afterglow"
+
+[sub_resource type="Resource" id="SubResource_partial_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 0
+value = 5.0
+duration_min = -1
+source_id = &"outing:date_night"
+label = "Decent date"
+
+[sub_resource type="Resource" id="SubResource_partial_rate_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 1
+value = 0.02
+duration_min = 360
+source_id = &"outing:date_night"
+label = "Pleasant date"
 
 [sub_resource type="Resource" id="SubResource_fail_mod"]
 script = ExtResource("6_statmod")
@@ -53,8 +80,17 @@ stat = 0
 kind = 0
 value = -20.0
 duration_min = -1
-source_id = &"outing_date_night_fail"
+source_id = &"outing:date_night"
 label = "Disastrous date"
+
+[sub_resource type="Resource" id="SubResource_fail_rate_mod"]
+script = ExtResource("6_statmod")
+stat = 3
+kind = 1
+value = 0.08
+duration_min = 360
+source_id = &"outing:date_night"
+label = "Date irritation"
 
 [resource]
 script = ExtResource("1_outing")
@@ -68,8 +104,10 @@ cost_cents = 5000
 checks = [SubResource("SubResource_hyg"), SubResource("SubResource_dress"), SubResource("SubResource_mkup"), SubResource("SubResource_wall")]
 pass_threshold = 0.8
 partial_threshold = 0.5
-pass_modifiers = [SubResource("SubResource_pass_mod")]
-fail_modifiers = [SubResource("SubResource_fail_mod")]
+late_penalty_per_10_min = 0.1
+pass_modifiers = [SubResource("SubResource_pass_mod"), SubResource("SubResource_pass_rate_mod")]
+partial_modifiers = [SubResource("SubResource_partial_mod"), SubResource("SubResource_partial_rate_mod")]
+fail_modifiers = [SubResource("SubResource_fail_mod"), SubResource("SubResource_fail_rate_mod")]
 pass_affinity_delta = 20
 partial_affinity_delta = 5
 fail_affinity_delta = -15

@@ -1,0 +1,174 @@
+[gd_scene load_steps=3 format=3 uid="uid://dp7summarym0dal"]
+
+[ext_resource type="Theme" path="res://ui/theme/brb_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://features/prep/departure_summary.gd" id="2_script"]
+
+[node name="DepartureSummary" type="CanvasLayer"]
+layer = 30
+script = ExtResource("2_script")
+
+[node name="ModalCenter" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Backdrop" type="ColorRect" parent="ModalCenter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.05, 0.08, 0.75)
+
+[node name="PanelContainer" type="PanelContainer" parent="ModalCenter"]
+custom_minimum_size = Vector2(460, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -240.0
+offset_right = 230.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ModalCenter/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.96, 0.98, 1)
+theme_override_font_sizes/font_size = 18
+text = "DEPARTURE EVALUATION"
+horizontal_alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="ChecklistHeaderLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "READINESS CHECKS"
+
+[node name="ChecklistContainer" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HSeparator2" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="DetailsVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RawScoreHBox" type="HBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox/RawScoreHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Raw Readiness:"
+
+[node name="ValueLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox/RawScoreHBox"]
+layout_mode = 2
+text = "100%"
+
+[node name="LatenessHBox" type="HBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox/LatenessHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Timing / Lateness:"
+
+[node name="ValueLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox/LatenessHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.83, 0.6, 1)
+text = "On time (No penalty)"
+
+[node name="FinalScoreHBox" type="HBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox/FinalScoreHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.96, 0.98, 1)
+text = "Final Outing Score:"
+
+[node name="ValueLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/DetailsVBox/FinalScoreHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.96, 0.98, 1)
+text = "100%"
+
+[node name="OutcomeContainer" type="PanelContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="OutcomeBadge" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/OutcomeContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.83, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "OUTCOME: PASS"
+horizontal_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="ConsequencesVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="ConsequencesTitle" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ConsequencesVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "OUTCOME PREVIEW"
+
+[node name="CostLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ConsequencesVBox"]
+layout_mode = 2
+text = "Cover charge: €0.00"
+
+[node name="DurationLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ConsequencesVBox"]
+layout_mode = 2
+text = "Duration: 3.0 hours"
+
+[node name="AffinityLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ConsequencesVBox"]
+layout_mode = 2
+text = "Affinity: +15"
+
+[node name="ModifiersList" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ConsequencesVBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="HSeparator4" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="ButtonHBox" type="HBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CancelButton" type="Button" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ButtonHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Back / Keep Prepping"
+
+[node name="ConfirmButton" type="Button" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ButtonHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Confirm Departure"
