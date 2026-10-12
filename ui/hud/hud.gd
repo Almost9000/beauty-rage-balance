@@ -27,6 +27,7 @@ const PHASE_NAMES: Dictionary = {
 @onready var modifiers_panel: PanelContainer = $RootControl/TopRightContainer/RightVBox/PhaseContainer/ModifiersPanel
 @onready var modifiers_title_label: Label = $RootControl/TopRightContainer/RightVBox/PhaseContainer/ModifiersPanel/VBox/ModifiersTitleLabel
 @onready var modifiers_list: VBoxContainer = $RootControl/TopRightContainer/RightVBox/PhaseContainer/ModifiersPanel/VBox/ModifiersList
+@onready var prep_checklist_ui: PrepChecklistUI = get_node_or_null("RootControl/TopRightContainer/RightVBox/PrepChecklistUI") as PrepChecklistUI
 
 var _modifiers_expanded: bool = false
 

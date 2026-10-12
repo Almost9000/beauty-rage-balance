@@ -1,0 +1,75 @@
+[gd_resource type="Resource" script_class="OutingData" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://core/resources/outing_data.gd" id="1_outing"]
+[ext_resource type="Script" path="res://core/resources/prep_checks/hygiene_check.gd" id="2_hyg"]
+[ext_resource type="Script" path="res://core/resources/prep_checks/dress_code_check.gd" id="3_dress"]
+[ext_resource type="Script" path="res://core/resources/prep_checks/makeup_check.gd" id="4_mkup"]
+[ext_resource type="Script" path="res://core/resources/prep_checks/wallet_check.gd" id="5_wall"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="6_statmod"]
+
+[sub_resource type="Resource" id="SubResource_hyg"]
+script = ExtResource("2_hyg")
+min_hygiene = 85.0
+weight = 1.2
+label = "Immaculate Hygiene"
+pass_threshold = 1.0
+
+[sub_resource type="Resource" id="SubResource_dress"]
+script = ExtResource("3_dress")
+required_tags = Array[StringName]([&"chic"])
+forbidden_tags = Array[StringName]([&"sporty", &"sleepwear"])
+condition_weight = 0.4
+weight = 1.2
+label = "Date Night Attire"
+pass_threshold = 0.75
+
+[sub_resource type="Resource" id="SubResource_mkup"]
+script = ExtResource("4_mkup")
+min_score = 0.75
+makeup_optional = false
+weight = 1.0
+label = "Evening Makeup"
+pass_threshold = 1.0
+
+[sub_resource type="Resource" id="SubResource_wall"]
+script = ExtResource("5_wall")
+cost_cents = 5000
+weight = 1.0
+label = "Dinner Funds (€50)"
+pass_threshold = 1.0
+
+[sub_resource type="Resource" id="SubResource_pass_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 0
+value = 25.0
+duration_min = -1
+source_id = &"outing_date_night_pass"
+label = "Romantic evening"
+
+[sub_resource type="Resource" id="SubResource_fail_mod"]
+script = ExtResource("6_statmod")
+stat = 0
+kind = 0
+value = -20.0
+duration_min = -1
+source_id = &"outing_date_night_fail"
+label = "Disastrous date"
+
+[resource]
+script = ExtResource("1_outing")
+id = &"date_night"
+type = 1
+display_name = "Date Night"
+prep_window_min = 120
+late_grace_min = 20
+duration_min = 180
+cost_cents = 5000
+checks = [SubResource("SubResource_hyg"), SubResource("SubResource_dress"), SubResource("SubResource_mkup"), SubResource("SubResource_wall")]
+pass_threshold = 0.8
+partial_threshold = 0.5
+pass_modifiers = [SubResource("SubResource_pass_mod")]
+fail_modifiers = [SubResource("SubResource_fail_mod")]
+pass_affinity_delta = 20
+partial_affinity_delta = 5
+fail_affinity_delta = -15

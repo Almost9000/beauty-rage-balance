@@ -68,6 +68,19 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 func get_value(stat: Enums.Stat) -> float:
 	return _values.get(stat, 0.0)
 
+func get_stat(stat: Variant) -> float:
+	if stat is String or stat is StringName:
+		var s: String = str(stat).to_upper()
+		match s:
+			"SANITY": return get_value(Enums.Stat.SANITY)
+			"HEALTH": return get_value(Enums.Stat.HEALTH)
+			"HYGIENE": return get_value(Enums.Stat.HYGIENE)
+			"RAGE": return get_value(Enums.Stat.RAGE)
+			_: return 0.0
+	if stat is int:
+		return get_value(stat as Enums.Stat)
+	return 0.0
+
 func set_value(stat: Enums.Stat, v: float) -> void:
 	if not _values.has(stat):
 		return

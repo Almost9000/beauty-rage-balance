@@ -60,6 +60,10 @@ func execute_action(_actor: Node = null) -> void:
 			if mod:
 				sm.call("add_modifier", mod)
 
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv and inv.has_method("clear_look"):
+		inv.call("clear_look")
+
 
 func start_shower(actor: Node) -> void:
 	if _is_showering:
