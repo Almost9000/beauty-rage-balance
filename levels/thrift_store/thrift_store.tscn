@@ -1,0 +1,199 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://levels/thrift_store/thrift_store.gd" id="1_store"]
+[ext_resource type="Material" path="res://assets/materials/floor.tres" id="2_floor"]
+[ext_resource type="Material" path="res://assets/materials/wall.tres" id="3_wall"]
+[ext_resource type="Material" path="res://assets/materials/furniture.tres" id="4_furn"]
+[ext_resource type="Material" path="res://assets/materials/accent.tres" id="5_acc"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="6_int"]
+[ext_resource type="PackedScene" path="res://features/thrift/clothing_rack.tscn" id="7_rack"]
+[ext_resource type="PackedScene" path="res://features/thrift/checkout_counter.tscn" id="8_counter"]
+[ext_resource type="PackedScene" path="res://features/player/player.tscn" id="9_player"]
+[ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="10_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_thrift"]
+sky_top_color = Color(0.4, 0.45, 0.55, 1)
+sky_horizon_color = Color(0.75, 0.75, 0.8, 1)
+ground_bottom_color = Color(0.2, 0.2, 0.25, 1)
+
+[sub_resource type="Sky" id="Sky_thrift"]
+sky_material = SubResource("ProceduralSkyMaterial_thrift")
+
+[sub_resource type="Environment" id="Environment_thrift"]
+background_mode = 2
+sky = SubResource("Sky_thrift")
+ambient_light_source = 3
+ambient_light_color = Color(0.95, 0.9, 0.82, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 3
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_thrift"]
+vertices = PackedVector3Array(-4.5, 0.05, -4.5, 4.5, 0.05, -4.5, 4.5, 0.05, 4.5, -4.5, 0.05, 4.5)
+polygons = [PackedInt32Array(0, 1, 2), PackedInt32Array(0, 2, 3)]
+agent_radius = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+material = ExtResource("2_floor")
+size = Vector3(10, 0.2, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(10, 0.2, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_z"]
+material = ExtResource("3_wall")
+size = Vector3(10, 3, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_z"]
+size = Vector3(10, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_x"]
+material = ExtResource("3_wall")
+size = Vector3(0.2, 3, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_x"]
+size = Vector3(0.2, 3, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+material = ExtResource("5_acc")
+size = Vector3(1.4, 2.4, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_exit_int"]
+size = Vector3(1.8, 2.4, 1.5)
+
+[node name="ThriftStore" type="Node3D" groups=["thrift_store"]]
+script = ExtResource("1_store")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_thrift")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 2, 5, 2)
+light_color = Color(1, 0.94, 0.86, 1)
+light_energy = 0.9
+shadow_enabled = true
+
+[node name="InteriorLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+light_color = Color(1, 0.92, 0.8, 1)
+light_energy = 1.0
+omni_range = 10.0
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_thrift")
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Floor"]
+mesh = SubResource("BoxMesh_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="WallNorth" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5)
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallNorth"]
+mesh = SubResource("BoxMesh_wall_z")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallNorth"]
+shape = SubResource("BoxShape3D_wall_z")
+
+[node name="WallSouth" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 5)
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallSouth"]
+mesh = SubResource("BoxMesh_wall_z")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallSouth"]
+shape = SubResource("BoxShape3D_wall_z")
+
+[node name="WallWest" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 0)
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallWest"]
+mesh = SubResource("BoxMesh_wall_x")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallWest"]
+shape = SubResource("BoxShape3D_wall_x")
+
+[node name="WallEast" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 0)
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallEast"]
+mesh = SubResource("BoxMesh_wall_x")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallEast"]
+shape = SubResource("BoxShape3D_wall_x")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="entrance" type="Marker3D" parent="SpawnPoints" groups=["spawn_points"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8)
+
+[node name="default" type="Marker3D" parent="SpawnPoints" groups=["spawn_points"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8)
+
+[node name="ExitDoor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.8)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ExitDoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+mesh = SubResource("BoxMesh_door")
+
+[node name="Interactable" type="Area3D" parent="ExitDoor"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("6_int")
+prompt_text = "Return to Apartment (20 min)"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitDoor/Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("BoxShape3D_exit_int")
+
+[node name="Racks" type="Node3D" parent="."]
+
+[node name="ClothingRack1" parent="Racks" instance=ExtResource("7_rack")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.5, 0, 0)
+rack_index = 0
+
+[node name="ClothingRack2" parent="Racks" instance=ExtResource("7_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5)
+rack_index = 1
+
+[node name="ClothingRack3" parent="Racks" instance=ExtResource("7_rack")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.5, 0, 0)
+rack_index = 2
+
+[node name="CheckoutCounter" parent="." instance=ExtResource("8_counter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 2.8)
+
+[node name="Player" parent="." groups=["player"] instance=ExtResource("9_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8)
+
+[node name="HUD" parent="." instance=ExtResource("10_hud")]
+
+[node name="ClosingBannerCanvas" type="CanvasLayer" parent="."]
+layer = 30
+
+[node name="Banner" type="PanelContainer" parent="ClosingBannerCanvas"]
+visible = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 44.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="ClosingBannerCanvas/Banner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 16
+text = "Thrift store closing soon! (Closes at 19:00)"
+horizontal_alignment = 1
+vertical_alignment = 1

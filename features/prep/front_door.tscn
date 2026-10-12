@@ -32,4 +32,81 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
+[node name="NoticeCanvas" type="CanvasLayer" parent="."]
+layer = 96
+
+[node name="NoticeBanner" type="PanelContainer" parent="NoticeCanvas"]
+visible = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="NoticeCanvas/NoticeBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 15
+text = "Thrift Store closed (10:00-19:00)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DoorMenuCanvas" type="CanvasLayer" parent="."]
+layer = 97
+
+[node name="DoorMenu" type="Control" parent="DoorMenuCanvas"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="DoorMenuCanvas/DoorMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.4)
+
+[node name="CenterContainer" type="CenterContainer" parent="DoorMenuCanvas/DoorMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="VBoxContainer" parent="DoorMenuCanvas/DoorMenu/CenterContainer"]
+custom_minimum_size = Vector2(280, 160)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="DoorMenuCanvas/DoorMenu/CenterContainer/MainPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Front Door Options"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="DoorMenuCanvas/DoorMenu/CenterContainer/MainPanel"]
+layout_mode = 2
+
+[node name="ThriftingButton" type="Button" parent="DoorMenuCanvas/DoorMenu/CenterContainer/MainPanel"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Go Thrifting (20 min)"
+
+[node name="WalkButton" type="Button" parent="DoorMenuCanvas/DoorMenu/CenterContainer/MainPanel"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Walk the dogs (20 min)"
+
+[node name="CancelButton" type="Button" parent="DoorMenuCanvas/DoorMenu/CenterContainer/MainPanel"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Cancel"
+
 [node name="DepartureSummary" parent="." instance=ExtResource("3_summary")]

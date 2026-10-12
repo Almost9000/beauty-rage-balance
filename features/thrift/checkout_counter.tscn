@@ -1,0 +1,138 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://features/thrift/checkout_counter.gd" id="1_counter"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="2_int"]
+[ext_resource type="Material" path="res://assets/materials/furniture.tres" id="3_mat"]
+[ext_resource type="Material" path="res://assets/materials/accent.tres" id="4_acc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_desk"]
+material = ExtResource("3_mat")
+size = Vector3(2, 1, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_reg"]
+material = ExtResource("4_acc")
+size = Vector3(0.4, 0.3, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(2, 1, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_int"]
+size = Vector3(2.4, 1.4, 1.6)
+
+[node name="CheckoutCounter" type="Node3D"]
+script = ExtResource("1_counter")
+
+[node name="CounterMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_desk")
+
+[node name="RegisterMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.15, 0)
+mesh = SubResource("BoxMesh_reg")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_body")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_int")
+prompt_text = "Pay & Checkout"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_int")
+
+[node name="CheckoutUI" type="CanvasLayer" parent="."]
+layer = 26
+
+[node name="PanelRoot" type="Control" parent="CheckoutUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="CheckoutUI/PanelRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="CenterContainer" type="CenterContainer" parent="CheckoutUI/PanelRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="VBoxContainer" parent="CheckoutUI/PanelRoot/CenterContainer"]
+custom_minimum_size = Vector2(480, 360)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Checkout Counter"
+
+[node name="HSeparator" type="HSeparator" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemsContainer" type="VBoxContainer" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="Summary" type="VBoxContainer" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="WalletLabel" type="Label" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel/Summary"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+text = "Wallet: €0.00"
+
+[node name="TotalLabel" type="Label" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel/Summary"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Total: €0.00"
+
+[node name="FeedbackLabel" type="Label" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="PayButton" type="Button" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel/ButtonRow"]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+text = "Pay & Checkout"
+
+[node name="CancelButton" type="Button" parent="CheckoutUI/PanelRoot/CenterContainer/MainPanel/ButtonRow"]
+custom_minimum_size = Vector2(100, 36)
+layout_mode = 2
+text = "Cancel"

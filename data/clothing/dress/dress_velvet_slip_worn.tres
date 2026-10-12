@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ClothingItem" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://core/resources/clothing_item.gd" id="1_ci"]
+[ext_resource type="PackedScene" path="res://assets/models/clothing/dress/dress_peasant_ensemble.glb" id="2_glb"]
+
+[resource]
+script = ExtResource("1_ci")
+id = &"dress_velvet_slip_worn"
+display_name = "90s Velvet Slip Dress (Worn)"
+slot = 2
+mesh_scene = ExtResource("2_glb")
+hides_regions = 18
+style_tags = Array[StringName]([&"vintage", &"formal", &"chic"])
+condition = 0.80
+price_cents = 2200
+modifiers = []

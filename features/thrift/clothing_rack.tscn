@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://features/thrift/clothing_rack.gd" id="1_rack"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="2_int"]
+[ext_resource type="PackedScene" path="res://features/thrift/rack_browser_ui.tscn" id="3_ui"]
+[ext_resource type="Material" path="res://assets/materials/furniture.tres" id="4_mat"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_rack"]
+material = ExtResource("4_mat")
+size = Vector3(1.8, 1.5, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(1.8, 1.5, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_int"]
+size = Vector3(2.2, 1.8, 1.2)
+
+[node name="ClothingRack" type="Node3D"]
+script = ExtResource("1_rack")
+
+[node name="RackMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BoxMesh_rack")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("BoxShape3D_body")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_int")
+prompt_text = "Browse Rack"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("BoxShape3D_int")
+
+[node name="RackBrowserUI" parent="." instance=ExtResource("3_ui")]

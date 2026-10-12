@@ -1,0 +1,73 @@
+[gd_resource type="Resource" script_class="ThriftPool" load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://core/resources/thrift_pool.gd" id="1_pool"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_vintage_blouse_worn.tres" id="2_top1"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_oversized_knit_worn.tres" id="3_top2"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_retro_band_tee_worn.tres" id="4_top3"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_corduroy_pants_worn.tres" id="5_bot1"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_faded_denim_worn.tres" id="6_bot2"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_plaid_skirt_worn.tres" id="7_bot3"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_retro_polka_worn.tres" id="8_drs1"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_velvet_slip_worn.tres" id="9_drs2"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_floral_boho_worn.tres" id="10_drs3"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_leather_loafers_worn.tres" id="11_shs1"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_scuffed_boots_worn.tres" id="12_shs2"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_retro_sneakers_worn.tres" id="13_shs3"]
+
+[resource]
+script = ExtResource("1_pool")
+racks_count = 3
+items_per_rack = 5
+open_minute = 600
+close_minute = 1140
+travel_time_min = 20
+dig_time_min = 5
+entries = [{
+"item": ExtResource("2_top1"),
+"price_range_cents": Vector2i(800, 1500),
+"weight": 1.2
+}, {
+"item": ExtResource("3_top2"),
+"price_range_cents": Vector2i(1000, 1800),
+"weight": 1.0
+}, {
+"item": ExtResource("4_top3"),
+"price_range_cents": Vector2i(500, 1200),
+"weight": 1.5
+}, {
+"item": ExtResource("5_bot1"),
+"price_range_cents": Vector2i(900, 1600),
+"weight": 1.0
+}, {
+"item": ExtResource("6_bot2"),
+"price_range_cents": Vector2i(800, 1400),
+"weight": 1.3
+}, {
+"item": ExtResource("7_bot3"),
+"price_range_cents": Vector2i(700, 1300),
+"weight": 1.1
+}, {
+"item": ExtResource("8_drs1"),
+"price_range_cents": Vector2i(1200, 2200),
+"weight": 0.9
+}, {
+"item": ExtResource("9_drs2"),
+"price_range_cents": Vector2i(1500, 2800),
+"weight": 0.8
+}, {
+"item": ExtResource("10_drs3"),
+"price_range_cents": Vector2i(1000, 1900),
+"weight": 1.0
+}, {
+"item": ExtResource("11_shs1"),
+"price_range_cents": Vector2i(1100, 2000),
+"weight": 0.9
+}, {
+"item": ExtResource("12_shs2"),
+"price_range_cents": Vector2i(800, 1500),
+"weight": 1.2
+}, {
+"item": ExtResource("13_shs3"),
+"price_range_cents": Vector2i(900, 1600),
+"weight": 1.1
+}]
