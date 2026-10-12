@@ -1,0 +1,99 @@
+[gd_scene load_steps=8 format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fur_dark"]
+albedo_color = Color(0.18, 0.18, 0.2, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fur_white"]
+albedo_color = Color(0.92, 0.92, 0.94, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nose"]
+albedo_color = Color(0.1, 0.08, 0.08, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_fur_dark")
+size = Vector3(0.28, 0.3, 0.56)
+
+[sub_resource type="BoxMesh" id="BoxMesh_chest"]
+material = SubResource("StandardMaterial3D_fur_white")
+size = Vector3(0.24, 0.22, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+material = SubResource("StandardMaterial3D_fur_dark")
+size = Vector3(0.2, 0.22, 0.24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_snout"]
+material = SubResource("StandardMaterial3D_fur_white")
+size = Vector3(0.13, 0.11, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nose"]
+material = SubResource("StandardMaterial3D_nose")
+size = Vector3(0.05, 0.04, 0.04)
+
+[sub_resource type="PrismMesh" id="PrismMesh_ear"]
+material = SubResource("StandardMaterial3D_fur_dark")
+size = Vector3(0.08, 0.12, 0.05)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_leg"]
+material = SubResource("StandardMaterial3D_fur_dark")
+top_radius = 0.04
+bottom_radius = 0.035
+height = 0.28
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tail"]
+material = SubResource("StandardMaterial3D_fur_white")
+top_radius = 0.02
+bottom_radius = 0.035
+height = 0.26
+
+[node name="CipaModel" type="Node3D"]
+
+[node name="Torso" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="ChestPatch" type="MeshInstance3D" parent="Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0.19)
+mesh = SubResource("BoxMesh_chest")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, 0.3)
+mesh = SubResource("BoxMesh_head")
+
+[node name="Snout" type="MeshInstance3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.16)
+mesh = SubResource("BoxMesh_snout")
+
+[node name="Nose" type="MeshInstance3D" parent="Head/Snout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0.08)
+mesh = SubResource("BoxMesh_nose")
+
+[node name="EarL" type="MeshInstance3D" parent="Head"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -0.08, 0.14, -0.02)
+mesh = SubResource("PrismMesh_ear")
+
+[node name="EarR" type="MeshInstance3D" parent="Head"]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0.08, 0.14, -0.02)
+mesh = SubResource("PrismMesh_ear")
+
+[node name="LegFL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11, 0.14, 0.19)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="LegFR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11, 0.14, 0.19)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="LegBL" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11, 0.14, -0.19)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="LegBR" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11, 0.14, -0.19)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="Tail" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0.38, -0.34)
+mesh = SubResource("CylinderMesh_tail")
