@@ -334,3 +334,66 @@ func test_debug_panel_money_section() -> void:
 	StatusManager.reset_state()
 	FinanceManager.reset_state()
 
+
+func test_debug_panel_makeup_section() -> void:
+	var inv: Node = get_node_or_null("/root/InventoryManager")
+	if inv and inv.has_method("reset_state"):
+		inv.call("reset_state")
+
+	var panel: CanvasLayer = load("res://ui/debug/debug_panel.tscn").instantiate()
+	add_child_autoqfree(panel)
+
+	panel.toggle_panel()
+
+	var sections_container: Node = panel.get_node("PanelRoot/MarginContainer/VBoxContainer/ScrollContainer/SectionsContainer")
+	assert_not_null(sections_container)
+
+	var makeup_section_node: Node = sections_container.get_node_or_null("Makeup")
+	assert_not_null(makeup_section_node, "Makeup section should exist in DebugPanel")
+
+	var items: Container = makeup_section_node.get_node_or_null("Items") as Container
+	assert_not_null(items)
+
+	var natural_btn: Button = null
+	var glam_btn: Button = null
+	var clear_btn: Button = null
+	for child: Node in items.get_children():
+		if child is Button:
+			var btn: Button = child as Button
+			if btn.text == "Apply Natural Look":
+				natural_btn = btn
+			elif btn.text == "Apply Glam Look":
+				glam_btn = btn
+			elif btn.text == "Clear Look":
+				clear_btn = btn
+
+	assert_not_null(natural_btn, "Apply Natural Look button exists")
+	assert_not_null(glam_btn, "Apply Glam Look button exists")
+	assert_not_null(clear_btn, "Clear Look button exists")
+
+	# Test Apply Natural Look
+	natural_btn.pressed.emit()
+	assert_not_null(inv.current_look, "Current look set after Apply Natural Look")
+	assert_eq(inv.current_look.display_name, "Natural", "Natural look applied")
+
+	# Test sliders exist
+	assert_true(panel._makeup_sliders.size() >= 5, "5 layer opacity sliders exist")
+	var blush_slider: HSlider = panel._makeup_sliders.get(Enums.MakeupLayer.BLUSH)
+	assert_not_null(blush_slider, "Blush slider exists")
+
+	# Test slider change updates look
+	blush_slider.value = 0.8
+	assert_almost_eq(float(inv.current_look.get_layer(Enums.MakeupLayer.BLUSH)["opacity"]), 0.8, 0.001, "Slider adjusts layer opacity in current look")
+
+	# Test Clear Look
+	clear_btn.pressed.emit()
+	assert_null(inv.current_look, "Current look cleared after Clear Look button")
+
+	# Test Apply Glam Look
+	glam_btn.pressed.emit()
+	assert_not_null(inv.current_look, "Current look set after Apply Glam Look")
+	assert_eq(inv.current_look.display_name, "Glam", "Glam look applied")
+
+	if inv and inv.has_method("reset_state"):
+		inv.call("reset_state")
+

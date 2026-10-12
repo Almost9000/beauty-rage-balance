@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CosmeticItem" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resources/cosmetic_item.gd" id="1_cos"]
+
+[resource]
+script = ExtResource("1_cos")
+id = &"cosmetic_eyeshadow_plum_noir"
+display_name = "Plum Noir Eyeshadow"
+layer = 2
+tint = Color(0.42, 0.18, 0.36, 1)
+price_cents = 1800

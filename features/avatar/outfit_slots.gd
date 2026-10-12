@@ -5,6 +5,7 @@ extends Node3D
 @export var body_mesh: MeshInstance3D
 @export var animation_player: AnimationPlayer
 @export var body_material: ShaderMaterial
+@export var face_makeup: FaceMakeup
 
 var _equipped_items: Dictionary = {}  # Enums.Slot -> ClothingItem
 var _slot_meshes: Dictionary = {}     # Enums.Slot -> Array[MeshInstance3D]
@@ -35,11 +36,15 @@ func _resolve_nodes() -> void:
 			body_mesh = find_child("Superhero_Female", true, false) as MeshInstance3D
 	if animation_player == null:
 		animation_player = find_child("AnimationPlayer", true, false) as AnimationPlayer
+	if face_makeup == null:
+		face_makeup = find_child("FaceMakeup", true, false) as FaceMakeup
 
 
 func _setup_body_material() -> void:
 	if body_material == null and body_mesh != null:
-		var shader: Shader = load("res://features/avatar/body_regions.gdshader") as Shader
+		var shader: Shader = load("res://features/avatar/face_makeup.gdshader") as Shader
+		if shader == null:
+			shader = load("res://features/avatar/body_regions.gdshader") as Shader
 		if shader:
 			body_material = ShaderMaterial.new()
 			body_material.shader = shader
@@ -55,6 +60,9 @@ func _setup_body_material() -> void:
 			body_mesh.material_override = body_material
 	elif body_mesh and body_material:
 		body_mesh.material_override = body_material
+
+	if face_makeup and face_makeup.body_material == null:
+		face_makeup.body_material = body_material
 
 
 func _connect_inventory_manager() -> void:
