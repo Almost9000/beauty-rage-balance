@@ -25,6 +25,7 @@ func _ready() -> void:
 	_setup_stats_section()
 	_setup_cycle_section()
 	_setup_money_section()
+	_setup_outfit_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
 
 var _capture_path: String = ""
@@ -61,6 +62,25 @@ func _process(delta: float) -> void:
 				var hud: Node = get_tree().root.find_child("HUD", true, false)
 				if hud and hud.has_method("set_modifiers_expanded"):
 					hud.call("set_modifiers_expanded", true)
+
+		if _capture_frame == 8:
+			if OS.get_environment("BRB_EQUIP_DRESS") == "1":
+				var inv: Node = get_node_or_null("/root/InventoryManager")
+				if inv and inv.has_method("equip"):
+					var dress_res: Resource = load("res://data/clothing/dress/dress_peasant_ensemble.tres")
+					if dress_res:
+						inv.call("equip", dress_res)
+
+		if _capture_frame == 12:
+			if OS.get_environment("BRB_WALK_ANIM") == "1":
+				var player: Node = get_tree().root.find_child("Player", true, false)
+				if player and player.get("avatar"):
+					var av: Node = player.get("avatar")
+					if av and av.get("animation_player"):
+						var ap: AnimationPlayer = av.get("animation_player") as AnimationPlayer
+						if ap:
+							ap.play("Walk")
+							ap.seek(0.6, true)
 
 		if _capture_frame >= 20:
 			var vp: Viewport = get_viewport()
@@ -369,6 +389,82 @@ func _on_charge_rent_pressed() -> void:
 	var fm: Node = _get_finance_manager()
 	if fm and fm.has_method("charge_rent"):
 		fm.call("charge_rent")
+
+func _setup_outfit_section() -> void:
+	var outfit_section: Container = add_section("Outfit")
+	add_watch(outfit_section, "Top", _get_debug_equipped_top)
+	add_watch(outfit_section, "Bottom", _get_debug_equipped_bottom)
+	add_watch(outfit_section, "Dress", _get_debug_equipped_dress)
+	add_watch(outfit_section, "Shoes", _get_debug_equipped_shoes)
+
+	add_button(outfit_section, "Equip: Peasant Tunic (Top)", _on_equip_top_pressed)
+	add_button(outfit_section, "Equip: Peasant Skirt (Bottom)", _on_equip_bottom_pressed)
+	add_button(outfit_section, "Equip: Peasant Boots (Shoes)", _on_equip_shoes_pressed)
+	add_button(outfit_section, "Equip: Peasant Ensemble (Dress)", _on_equip_dress_pressed)
+	add_button(outfit_section, "Unequip All", _on_unequip_all_pressed)
+	add_button(outfit_section, "Reset Starting Outfit", _on_reset_outfit_pressed)
+
+func _get_inventory_manager() -> Node:
+	return get_node_or_null("/root/InventoryManager")
+
+func _get_debug_equipped_top() -> String:
+	return _get_debug_slot_name(Enums.Slot.TOP)
+
+func _get_debug_equipped_bottom() -> String:
+	return _get_debug_slot_name(Enums.Slot.BOTTOM)
+
+func _get_debug_equipped_dress() -> String:
+	return _get_debug_slot_name(Enums.Slot.DRESS)
+
+func _get_debug_equipped_shoes() -> String:
+	return _get_debug_slot_name(Enums.Slot.SHOES)
+
+func _get_debug_slot_name(slot: Enums.Slot) -> String:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("get_equipped"):
+		var item: ClothingItem = inv.call("get_equipped", slot) as ClothingItem
+		if item:
+			return item.display_name
+	return "(none)"
+
+func _on_equip_top_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("equip"):
+		var item: ClothingItem = load("res://data/clothing/top/top_peasant_tunic.tres") as ClothingItem
+		if item:
+			inv.call("equip", item)
+
+func _on_equip_bottom_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("equip"):
+		var item: ClothingItem = load("res://data/clothing/bottom/bottom_peasant_skirt.tres") as ClothingItem
+		if item:
+			inv.call("equip", item)
+
+func _on_equip_shoes_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("equip"):
+		var item: ClothingItem = load("res://data/clothing/shoes/shoes_peasant_boots.tres") as ClothingItem
+		if item:
+			inv.call("equip", item)
+
+func _on_equip_dress_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("equip"):
+		var item: ClothingItem = load("res://data/clothing/dress/dress_peasant_ensemble.tres") as ClothingItem
+		if item:
+			inv.call("equip", item)
+
+func _on_unequip_all_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("unequip"):
+		for slot in Enums.Slot.values():
+			inv.call("unequip", slot)
+
+func _on_reset_outfit_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("reset_state"):
+		inv.call("reset_state")
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

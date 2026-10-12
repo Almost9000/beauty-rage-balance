@@ -116,8 +116,8 @@ func test_player_scene_instantiation() -> void:
 	var mount = player.get_node_or_null("AvatarMount")
 	assert_not_null(mount, "AvatarMount node should exist")
 
-	var mesh = mount.get_node_or_null("PlaceholderMesh")
-	assert_not_null(mesh, "PlaceholderMesh should exist under AvatarMount")
+	var avatar_node = mount.get_node_or_null("Avatar")
+	assert_not_null(avatar_node, "Avatar should exist under AvatarMount")
 
 	var probe = player.get_node_or_null("InteractionProbe")
 	assert_not_null(probe, "InteractionProbe should exist")

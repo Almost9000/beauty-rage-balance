@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StartingInventory" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://core/resources/starting_inventory.gd" id="1_si"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_peasant_tunic.tres" id="2_top"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_peasant_skirt.tres" id="3_bot"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_peasant_boots.tres" id="4_sho"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_peasant_ensemble.tres" id="5_dre"]
+
+[resource]
+script = ExtResource("1_si")
+owned_clothing = [ExtResource("2_top"), ExtResource("3_bot"), ExtResource("4_sho"), ExtResource("5_dre")]
+equipped_clothing = [ExtResource("2_top"), ExtResource("3_bot"), ExtResource("4_sho")]

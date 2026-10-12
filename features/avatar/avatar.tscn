@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8avatar001tscn"]
+
+[ext_resource type="Script" path="res://features/avatar/outfit_slots.gd" id="1_outfit"]
+[ext_resource type="PackedScene" path="res://assets/models/characters/base_body/base_body.glb" id="2_base_body"]
+
+[node name="Avatar" type="Node3D"]
+script = ExtResource("1_outfit")
+
+[node name="BaseBody" parent="." instance=ExtResource("2_base_body")]

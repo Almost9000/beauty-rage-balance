@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://deetcxdpbtxre"
+path="res://.godot/imported/base_body_T_Hair_2_BaseColor.png-b87360654215a18ac2cc950d72887624.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "8f3b2b667eb6f8a1a6e5018e34a30bf9"
+}
+
+[deps]
+
+source_file="res://assets/models/characters/base_body/base_body_T_Hair_2_BaseColor.png"
+dest_files=["res://.godot/imported/base_body_T_Hair_2_BaseColor.png-b87360654215a18ac2cc950d72887624.ctex"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1
