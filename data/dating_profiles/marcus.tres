@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DatingProfile" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://core/resources/dating_profile.gd" id="1_profile"]
+[ext_resource type="Texture2D" path="res://assets/textures/dating/marcus_photo.png" id="2_photo"]
+[ext_resource type="Resource" path="res://data/outings/date_night.tres" id="3_outing"]
+
+[resource]
+script = ExtResource("1_profile")
+id = &"marcus"
+display_name = "Marcus"
+age = 31
+bio = "Product Manager & amateur chef. Cooks fresh pasta from scratch. Looking for someone ambitious who values quality time and honest communication."
+photo = ExtResource("2_photo")
+green_flags = Array[String](["Cooks amazing meals", "Direct and clear about intentions", "Emotionally mature"])
+red_flags = Array[String](["Treats casual dates like quarterly performance reviews", "Critiques your knife technique"])
+match_chance = 0.8
+date_outing = ExtResource("3_outing")
+tags = Array[String](["foodie", "career", "organized"])

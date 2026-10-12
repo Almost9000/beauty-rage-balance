@@ -119,6 +119,23 @@ func get_effective_rate(stat: Enums.Stat) -> float:
 
 	return (base_rate + add_sum) * mul_prod
 
+func apply_instant_modifier(stat: Variant, delta: float, source: StringName = &"") -> void:
+	var mod := StatModifier.new()
+	if stat is Enums.Stat:
+		mod.stat = stat
+	elif stat is String or stat is StringName:
+		match str(stat).to_upper():
+			"SANITY": mod.stat = Enums.Stat.SANITY
+			"HEALTH": mod.stat = Enums.Stat.HEALTH
+			"HYGIENE": mod.stat = Enums.Stat.HYGIENE
+			"RAGE": mod.stat = Enums.Stat.RAGE
+			_: mod.stat = Enums.Stat.SANITY
+	mod.kind = Enums.ModifierKind.INSTANT
+	mod.value = delta
+	mod.source_id = source
+	add_modifier(mod)
+
+
 func add_modifier(mod: StatModifier) -> void:
 	if not mod or not mod.is_valid():
 		push_warning("StatusManager: Cannot add invalid modifier.")

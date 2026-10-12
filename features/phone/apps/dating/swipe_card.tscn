@@ -1,0 +1,253 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://features/phone/apps/dating/swipe_card.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.13, 0.15, 0.22, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.32, 0.38, 0.52, 0.8)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_photo_box"]
+bg_color = Color(0.08, 0.1, 0.15, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_like_stamp"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.35, 0.2, 0.3)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.88, 0.45, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pass_stamp"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.4, 0.12, 0.15, 0.3)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.3, 0.35, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="SwipeCard" type="Control"]
+custom_minimum_size = Vector2(280, 440)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -220.0
+offset_right = 140.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(140, 220)
+mouse_filter = 0
+script = ExtResource("1_script")
+
+[node name="CardPanel" type="PanelContainer" parent="."]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="MarginContainer" type="MarginContainer" parent="CardPanel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CardVBox" type="VBoxContainer" parent="CardPanel/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="PhotoContainer" type="PanelContainer" parent="CardPanel/MarginContainer/CardVBox"]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_photo_box")
+
+[node name="PhotoRect" type="TextureRect" parent="CardPanel/MarginContainer/CardVBox/PhotoContainer"]
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoVBox" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="InfoMargin" type="MarginContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 0
+
+[node name="HeaderHBox" type="HBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/InfoMargin"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NameAgeLabel" type="Label" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/InfoMargin/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.98, 0.98, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "Julian, 28"
+
+[node name="BioMargin" type="MarginContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 2
+
+[node name="BioLabel" type="Label" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/BioMargin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.84, 0.92, 0.9)
+theme_override_font_sizes/font_size = 10
+text = "Coffee enthusiast, cyclist, designing walkable spaces. Love museum dates and good conversation."
+autowrap_mode = 2
+max_lines_visible = 3
+
+[node name="HSeparator" type="HSeparator" parent="CardPanel/MarginContainer/CardVBox/InfoVBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FlagsScroll" type="ScrollContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+horizontal_scroll_mode = 0
+
+[node name="FlagsVBox" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="FlagsMargin" type="MarginContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="FlagsContent" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="GreenFlagsSection" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin/FlagsContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="GreenFlagsTitle" type="Label" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin/FlagsContent/GreenFlagsSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.85, 0.55, 0.95)
+theme_override_font_sizes/font_size = 9
+text = "GREEN FLAGS"
+
+[node name="GreenFlagsList" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin/FlagsContent/GreenFlagsSection"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="RedFlagsSection" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin/FlagsContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="RedFlagsTitle" type="Label" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin/FlagsContent/RedFlagsSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.45, 0.48, 0.95)
+theme_override_font_sizes/font_size = 9
+text = "RED FLAGS"
+
+[node name="RedFlagsList" type="VBoxContainer" parent="CardPanel/MarginContainer/CardVBox/InfoVBox/FlagsScroll/FlagsVBox/FlagsMargin/FlagsContent/RedFlagsSection"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="LikeStamp" type="PanelContainer" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 16.0
+offset_top = 18.0
+offset_right = 78.0
+offset_bottom = 48.0
+rotation = -0.226893
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_like_stamp")
+
+[node name="LikeLabel" type="Label" parent="LikeStamp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.45, 1)
+theme_override_font_sizes/font_size = 14
+text = "LIKE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PassStamp" type="PanelContainer" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -78.0
+offset_top = 18.0
+offset_right = -16.0
+offset_bottom = 48.0
+grow_horizontal = 0
+rotation = 0.226893
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pass_stamp")
+
+[node name="PassLabel" type="Label" parent="PassStamp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.3, 0.35, 1)
+theme_override_font_sizes/font_size = 14
+text = "PASS"
+horizontal_alignment = 1
+vertical_alignment = 1
