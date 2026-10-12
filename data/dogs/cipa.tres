@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="DogProfile" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://core/resources/dog_profile.gd" id="1_prof"]
+[ext_resource type="PackedScene" path="res://assets/models/dogs/cipa/cipa_model.tscn" id="2_mesh"]
+
+[resource]
+script = ExtResource("1_prof")
+id = &"cipa"
+display_name = "Čipa"
+mesh_scene = ExtResource("2_mesh")
+scale = Vector3(0.85, 0.85, 0.85)
+speed = 2.4
+hunger_decay_per_hour = 7.0
+bladder_decay_per_hour = 14.0
+affection_decay_per_hour = 10.0
+energy_decay_per_hour = 8.0
+hunger_threshold = 65.0
+bladder_threshold = 65.0
+affection_threshold = 35.0
+energy_threshold = 25.0
+bark_interval_min = 15

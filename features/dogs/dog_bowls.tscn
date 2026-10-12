@@ -1,0 +1,79 @@
+[gd_scene load_steps=11 format=3 uid="uid://d0gb0wlsst4t10n"]
+
+[ext_resource type="Script" path="res://features/dogs/dog_bowls.gd" id="1_bowls"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="2_int"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mat"]
+albedo_color = Color(0.25, 0.28, 0.35, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_steel"]
+albedo_color = Color(0.75, 0.76, 0.78, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_water"]
+albedo_color = Color(0.2, 0.5, 0.8, 0.8)
+roughness = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kibble"]
+albedo_color = Color(0.45, 0.3, 0.18, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_mat"]
+material = SubResource("StandardMaterial3D_mat")
+size = Vector3(0.7, 0.02, 0.45)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bowl"]
+material = SubResource("StandardMaterial3D_steel")
+top_radius = 0.15
+bottom_radius = 0.12
+height = 0.08
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_water"]
+material = SubResource("StandardMaterial3D_water")
+top_radius = 0.14
+bottom_radius = 0.14
+height = 0.06
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kibble"]
+material = SubResource("StandardMaterial3D_kibble")
+top_radius = 0.14
+bottom_radius = 0.14
+height = 0.06
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_int"]
+size = Vector3(1.2, 1.0, 1.0)
+
+[node name="DogBowls" type="Node3D" groups=["dog_bowls"]]
+script = ExtResource("1_bowls")
+
+[node name="MatMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+mesh = SubResource("BoxMesh_mat")
+
+[node name="FoodBowl" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.04, 0)
+mesh = SubResource("CylinderMesh_bowl")
+
+[node name="FoodMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.045, 0)
+visible = false
+mesh = SubResource("CylinderMesh_kibble")
+
+[node name="WaterBowl" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.04, 0)
+mesh = SubResource("CylinderMesh_bowl")
+
+[node name="WaterMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.045, 0)
+mesh = SubResource("CylinderMesh_water")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_int")
+prompt_text = "Fill dog bowls"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_int")

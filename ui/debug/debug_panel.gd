@@ -29,6 +29,7 @@ func _ready() -> void:
 	_setup_makeup_section()
 	_setup_outings_section()
 	_setup_cleaning_section()
+	_setup_dogs_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
 
 
@@ -756,6 +757,102 @@ func _on_clear_all_clutter_pressed() -> void:
 		if is_instance_valid(node) and not node.is_queued_for_deletion():
 			node.queue_free()
 	_refresh_watches()
+
+func _setup_dogs_section() -> void:
+	var section: Container = add_section("Dogs")
+	add_watch(section, "Maja", func() -> String: return _get_dog_debug_status(&"maja"))
+	add_watch(section, "Čipa", func() -> String: return _get_dog_debug_status(&"cipa"))
+
+	add_button(section, "Pet Maja", func() -> void: _debug_pet_dog(&"maja"))
+	add_button(section, "Maja Bladder -> 100", func() -> void: _debug_set_dog_need(&"maja", &"bladder", 100.0))
+	add_button(section, "Maja Affection -> 0", func() -> void: _debug_set_dog_need(&"maja", &"affection", 0.0))
+	add_button(section, "Maja Force Wander", func() -> void: _debug_force_dog_state(&"maja", &"Wander"))
+	add_button(section, "Maja Force Sleep", func() -> void: _debug_force_dog_state(&"maja", &"Sleep"))
+
+	add_button(section, "Pet Čipa", func() -> void: _debug_pet_dog(&"cipa"))
+	add_button(section, "Čipa Bladder -> 100", func() -> void: _debug_set_dog_need(&"cipa", &"bladder", 100.0))
+	add_button(section, "Čipa Affection -> 0", func() -> void: _debug_set_dog_need(&"cipa", &"affection", 0.0))
+	add_button(section, "Čipa Force Wander", func() -> void: _debug_force_dog_state(&"cipa", &"Wander"))
+	add_button(section, "Čipa Force Sleep", func() -> void: _debug_force_dog_state(&"cipa", &"Sleep"))
+
+	add_button(section, "Fill Dog Bowls", _debug_fill_bowls)
+	add_button(section, "Walk Dogs (20 min)", _debug_walk_dogs)
+
+func _find_dog(dog_id: StringName) -> Dog:
+	var tree: SceneTree = get_tree()
+	if not tree:
+		return null
+	for node: Node in tree.get_nodes_in_group(&"dogs"):
+		if node is Dog and is_instance_valid(node):
+			if node.profile and node.profile.id == dog_id:
+				return node
+			if node.name.to_lower() == String(dog_id).to_lower():
+				return node
+	return null
+
+func _get_dog_debug_status(dog_id: StringName) -> String:
+	var dog: Dog = _find_dog(dog_id)
+	if not dog:
+		return "Not found"
+	var state_name: String = "--"
+	if dog.dog_brain and dog.dog_brain.current_state:
+		state_name = String(dog.dog_brain.current_state.name)
+	var h: float = dog.get_need(&"hunger")
+	var b: float = dog.get_need(&"bladder")
+	var a: float = dog.get_need(&"affection")
+	var e: float = dog.get_need(&"energy")
+	return "[%s] H:%.0f B:%.0f A:%.0f E:%.0f" % [state_name, h, b, a, e]
+
+func _debug_pet_dog(dog_id: StringName) -> void:
+	var dog: Dog = _find_dog(dog_id)
+	if dog:
+		dog.pet()
+	_refresh_watches()
+
+func _debug_set_dog_need(dog_id: StringName, need: StringName, value: float) -> void:
+	var dog: Dog = _find_dog(dog_id)
+	if dog:
+		dog.set_need(need, value)
+		if need == &"bladder" and value >= 100.0:
+			dog.spawn_accident()
+	_refresh_watches()
+
+func _debug_force_dog_state(dog_id: StringName, state_name: StringName) -> void:
+	var dog: Dog = _find_dog(dog_id)
+	if dog and dog.dog_brain:
+		dog.dog_brain.transition_to(state_name)
+	_refresh_watches()
+
+func _debug_fill_bowls() -> void:
+	var tree: SceneTree = get_tree()
+	if not tree:
+		return
+	var bowls: Array[Node] = tree.get_nodes_in_group(&"dog_bowls")
+	if not bowls.is_empty():
+		var b: Node = bowls[0]
+		if b.has_method("fill"):
+			b.call("fill")
+	_refresh_watches()
+
+func _debug_walk_dogs() -> void:
+	var tree: SceneTree = get_tree()
+	if not tree:
+		return
+	var doors: Array[Node] = tree.get_nodes_in_group(&"front_door")
+	if doors.is_empty() and tree.current_scene:
+		var d: Node = tree.current_scene.find_child("FrontDoor", true, false)
+		if d:
+			doors.append(d)
+	if not doors.is_empty():
+		var door: Node = doors[0]
+		if door.has_method("walk_dogs"):
+			door.call("walk_dogs")
+	else:
+		for d: Node in tree.get_nodes_in_group(&"dogs"):
+			if d is Dog:
+				d.walk()
+	_refresh_watches()
+
 
 
 func add_section(title: String) -> Container:

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="DogProfile" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://core/resources/dog_profile.gd" id="1_prof"]
+[ext_resource type="PackedScene" path="res://assets/models/dogs/maja/maja_model.tscn" id="2_mesh"]
+
+[resource]
+script = ExtResource("1_prof")
+id = &"maja"
+display_name = "Maja"
+mesh_scene = ExtResource("2_mesh")
+scale = Vector3(1.15, 1.15, 1.15)
+speed = 1.8
+hunger_decay_per_hour = 5.0
+bladder_decay_per_hour = 8.0
+affection_decay_per_hour = 6.0
+energy_decay_per_hour = 4.0
+hunger_threshold = 70.0
+bladder_threshold = 70.0
+affection_threshold = 30.0
+energy_threshold = 20.0
+bark_interval_min = 25

@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://m4j4d0gsc3n3"]
+
+[ext_resource type="PackedScene" path="res://features/dogs/dog.tscn" id="1_dog"]
+[ext_resource type="Resource" path="res://data/dogs/maja.tres" id="2_prof"]
+
+[node name="Maja" instance=ExtResource("1_dog")]
+profile = ExtResource("2_prof")

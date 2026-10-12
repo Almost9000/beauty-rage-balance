@@ -69,13 +69,56 @@ func _restore_from_state(state: Dictionary) -> void:
 					pos = pos_raw
 				clutter_spawner.spawn(type_name, pos)
 
-	if state.has("left_at_minute") and clutter_spawner:
+	if state.has("dog_bowls"):
+		var b_data: Dictionary = state["dog_bowls"]
+		var bowls_nodes: Array[Node] = []
+		if is_inside_tree():
+			bowls_nodes = get_tree().get_nodes_in_group(&"dog_bowls")
+		else:
+			var b_node: Node = find_child("DogBowls", true, false)
+			if b_node:
+				bowls_nodes.append(b_node)
+		if not bowls_nodes.is_empty():
+			var b: Node = bowls_nodes[0]
+			if "portions_remaining" in b:
+				b.set("portions_remaining", int(b_data.get("portions", 0)))
+
+	var elapsed: int = 0
+	if state.has("left_at_minute"):
 		var left_at: int = int(state.get("left_at_minute", 0))
 		var clock: Node = get_node_or_null("/root/GameClock")
 		var now_m: int = int(clock.get("now_minutes")) if clock else left_at
-		var elapsed: int = maxi(0, now_m - left_at)
-		if elapsed > 0:
-			clutter_spawner.simulate_elapsed_time(elapsed)
+		elapsed = maxi(0, now_m - left_at)
+
+	if state.has("dogs"):
+		var dogs_dict: Dictionary = state["dogs"]
+		var dogs: Array[Node] = []
+		if is_inside_tree():
+			dogs = get_tree().get_nodes_in_group(&"dogs")
+		else:
+			var dogs_node: Node = find_child("Dogs", true, false)
+			if dogs_node:
+				dogs = dogs_node.get_children()
+
+		for d: Node in dogs:
+			var dog_id: String = ""
+			if "profile" in d and d.profile != null:
+				dog_id = String(d.profile.id)
+			elif "name" in d:
+				dog_id = String(d.name).to_lower()
+
+			if dogs_dict.has(dog_id):
+				var d_data: Dictionary = dogs_dict[dog_id]
+				if d.has_method("from_dict"):
+					d.call("from_dict", d_data)
+				elif "needs" in d and d_data.has("needs"):
+					d.needs = d_data["needs"].duplicate()
+
+				if elapsed > 0 and d.has_method("integrate_time"):
+					d.call("integrate_time", elapsed)
+
+	if elapsed > 0 and clutter_spawner:
+		clutter_spawner.simulate_elapsed_time(elapsed)
 
 func save_state() -> Dictionary:
 	var clutter_data: Array[Dictionary] = []
@@ -96,12 +139,55 @@ func save_state() -> Dictionary:
 					"position": [c.global_position.x, c.global_position.y, c.global_position.z]
 				})
 
+	var dogs_data: Dictionary = {}
+	var dogs: Array[Node] = []
+	if is_inside_tree():
+		dogs = get_tree().get_nodes_in_group(&"dogs")
+	else:
+		var dogs_node: Node = find_child("Dogs", true, false)
+		if dogs_node:
+			dogs = dogs_node.get_children()
+
+	for d: Node in dogs:
+		if is_instance_valid(d) and not d.is_queued_for_deletion():
+			var dog_id: String = ""
+			if "profile" in d and d.profile != null:
+				dog_id = String(d.profile.id)
+			elif "name" in d:
+				dog_id = String(d.name).to_lower()
+			if not dog_id.is_empty():
+				if d.has_method("to_dict"):
+					dogs_data[dog_id] = d.call("to_dict")
+				elif "needs" in d:
+					dogs_data[dog_id] = {
+						"needs": d.needs.duplicate(),
+						"position": [d.global_position.x, d.global_position.y, d.global_position.z]
+					}
+
+	var bowls_data: Dictionary = {}
+	var bowls_nodes: Array[Node] = []
+	if is_inside_tree():
+		bowls_nodes = get_tree().get_nodes_in_group(&"dog_bowls")
+	else:
+		var b_node: Node = find_child("DogBowls", true, false)
+		if b_node:
+			bowls_nodes.append(b_node)
+
+	if not bowls_nodes.is_empty():
+		var b: Node = bowls_nodes[0]
+		bowls_data = {
+			"has_food": bool(b.get("has_food")),
+			"portions": int(b.get("portions_remaining")),
+		}
+
 	var clock: Node = get_node_or_null("/root/GameClock")
 	var now_m: int = int(clock.get("now_minutes")) if clock else 0
 
 	var state: Dictionary = {
 		"clutter": clutter_data,
 		"left_at_minute": now_m,
+		"dogs": dogs_data,
+		"dog_bowls": bowls_data,
 	}
 
 	var router: Node = get_node_or_null("/root/SceneRouter")

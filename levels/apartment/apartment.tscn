@@ -16,6 +16,9 @@
 [ext_resource type="PackedScene" path="res://features/prep/front_door.tscn" id="14_door"]
 [ext_resource type="Script" path="res://features/cleaning/clutter_spawner.gd" id="15_spawner"]
 [ext_resource type="Script" path="res://features/cleaning/comfort_score.gd" id="16_comfort"]
+[ext_resource type="PackedScene" path="res://features/dogs/dog_bowls.tscn" id="17_bowls"]
+[ext_resource type="PackedScene" path="res://features/dogs/maja.tscn" id="18_maja"]
+[ext_resource type="PackedScene" path="res://features/dogs/cipa.tscn" id="19_cipa"]
 
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8qlm"]
@@ -1012,6 +1015,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 [node name="dog_bowls" type="Marker3D" parent="Stations"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.8, 0, -3.8)
 
+[node name="DogBowls" parent="Stations/dog_bowls" instance=ExtResource("17_bowls")]
+
 [node name="dog_bed" type="Marker3D" parent="Stations"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, 4.8)
 
@@ -1089,4 +1094,13 @@ script = ExtResource("15_spawner")
 script = ExtResource("16_comfort")
 
 [node name="ClutterContainer" type="Node3D" parent="."]
+
+[node name="Dogs" type="Node3D" parent="."]
+
+[node name="Maja" parent="Dogs" instance=ExtResource("18_maja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.1, 4.2)
+
+[node name="Cipa" parent="Dogs" instance=ExtResource("19_cipa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.1, 2.5)
+
 

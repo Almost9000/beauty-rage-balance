@@ -1,0 +1,70 @@
+[gd_scene load_steps=12 format=3 uid="uid://b3stf0rd0gsc3n3"]
+
+[ext_resource type="Script" path="res://features/dogs/dog.gd" id="1_dog"]
+[ext_resource type="Script" path="res://features/dogs/dog_brain.gd" id="2_brain"]
+[ext_resource type="Script" path="res://features/dogs/states/idle_state.gd" id="3_idle"]
+[ext_resource type="Script" path="res://features/dogs/states/wander_state.gd" id="4_wander"]
+[ext_resource type="Script" path="res://features/dogs/states/follow_state.gd" id="5_follow"]
+[ext_resource type="Script" path="res://features/dogs/states/request_state.gd" id="6_request"]
+[ext_resource type="Script" path="res://features/dogs/states/cuddle_state.gd" id="7_cuddle"]
+[ext_resource type="Script" path="res://features/dogs/states/eat_state.gd" id="8_eat"]
+[ext_resource type="Script" path="res://features/dogs/states/sleep_state.gd" id="9_sleep"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="10_int"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.25
+height = 0.7
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_int"]
+size = Vector3(1.2, 1.0, 1.2)
+
+[node name="Dog" type="CharacterBody3D" groups=["dogs"]]
+collision_layer = 8
+collision_mask = 3
+script = ExtResource("1_dog")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.35, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.5
+target_desired_distance = 0.8
+path_max_distance = 3.0
+
+[node name="DogBrain" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_brain")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="DogBrain"]
+script = ExtResource("3_idle")
+
+[node name="Wander" type="Node" parent="DogBrain"]
+script = ExtResource("4_wander")
+
+[node name="Follow" type="Node" parent="DogBrain"]
+script = ExtResource("5_follow")
+
+[node name="Request" type="Node" parent="DogBrain"]
+script = ExtResource("6_request")
+
+[node name="Cuddle" type="Node" parent="DogBrain"]
+script = ExtResource("7_cuddle")
+
+[node name="Eat" type="Node" parent="DogBrain"]
+script = ExtResource("8_eat")
+
+[node name="Sleep" type="Node" parent="DogBrain"]
+script = ExtResource("9_sleep")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("10_int")
+prompt_text = "Pet Dog"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_int")
+
+[node name="Visual" type="Node3D" parent="."]
