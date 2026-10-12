@@ -1,0 +1,153 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/thrift/rack_browser_ui.gd" id="1_rack_ui"]
+
+[node name="RackBrowserUI" type="CanvasLayer"]
+layer = 25
+script = ExtResource("1_rack_ui")
+
+[node name="PanelRoot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="PanelRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="VBoxContainer" parent="PanelRoot/CenterContainer"]
+custom_minimum_size = Vector2(680, 380)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Clothing Rack"
+
+[node name="CloseButton" type="Button" parent="PanelRoot/CenterContainer/MainPanel/Header"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+
+[node name="ContentSplit" type="HBoxContainer" parent="PanelRoot/CenterContainer/MainPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="ItemCard" type="VBoxContainer" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="RackProgressLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "Item 1 of 5"
+
+[node name="ItemNameLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Item Name"
+
+[node name="SlotLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+text = "Slot: Top"
+
+[node name="ConditionLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+text = "Condition: 70% (Good)"
+
+[node name="PriceLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "€12.00"
+
+[node name="TagsLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
+text = "Tags: vintage, casual"
+
+[node name="Spacer" type="Control" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonRow" type="HBoxContainer" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DigButton" type="Button" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard/ButtonRow"]
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
+text = "Dig (5 min)"
+
+[node name="AddToBasketButton" type="Button" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/ItemCard/ButtonRow"]
+custom_minimum_size = Vector2(130, 36)
+layout_mode = 2
+text = "Add to Basket"
+
+[node name="VSeparator" type="VSeparator" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit"]
+layout_mode = 2
+
+[node name="BasketDrawer" type="VBoxContainer" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BasketTitle" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/BasketDrawer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Shopping Basket"
+
+[node name="BasketScroll" type="ScrollContainer" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/BasketDrawer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BasketItemsContainer" type="VBoxContainer" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/BasketDrawer/BasketScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="BasketSummary" type="VBoxContainer" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/BasketDrawer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BasketCountLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/BasketDrawer/BasketSummary"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "Basket: 0 items"
+
+[node name="BasketTotalLabel" type="Label" parent="PanelRoot/CenterContainer/MainPanel/ContentSplit/BasketDrawer/BasketSummary"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "Total: €0.00"

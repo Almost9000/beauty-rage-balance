@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ClothingItem" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://core/resources/clothing_item.gd" id="1_ci"]
+[ext_resource type="PackedScene" path="res://assets/models/clothing/bottom/bottom_peasant_skirt.glb" id="2_glb"]
+
+[resource]
+script = ExtResource("1_ci")
+id = &"bottom_corduroy_pants_worn"
+display_name = "Wide-Leg Corduroy Pants (Worn)"
+slot = 1
+mesh_scene = ExtResource("2_glb")
+hides_regions = 16
+style_tags = Array[StringName]([&"vintage", &"casual", &"cozy"])
+condition = 0.75
+price_cents = 1300
+modifiers = []
