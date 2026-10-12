@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="StartingInventory" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="StartingInventory" load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://core/resources/starting_inventory.gd" id="1_si"]
 [ext_resource type="Resource" path="res://data/clothing/top/top_peasant_tunic.tres" id="2_top"]
@@ -12,8 +12,19 @@
 [ext_resource type="Resource" path="res://data/clothing/shoes/shoes_party_heels.tres" id="10_sho_party"]
 [ext_resource type="Resource" path="res://data/clothing/shoes/shoes_sporty_sneakers.tres" id="11_sho_sporty"]
 [ext_resource type="Resource" path="res://data/clothing/dress/dress_party_gown.tres" id="12_dre_party"]
+[ext_resource type="Resource" path="res://data/cosmetics/base/base_warm_beige.tres" id="13_c_base1"]
+[ext_resource type="Resource" path="res://data/cosmetics/base/base_porcelain.tres" id="14_c_base2"]
+[ext_resource type="Resource" path="res://data/cosmetics/blush/blush_peach_glow.tres" id="15_c_blush1"]
+[ext_resource type="Resource" path="res://data/cosmetics/blush/blush_soft_rose.tres" id="16_c_blush2"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeshadow/eyeshadow_taupe.tres" id="17_c_shadow1"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeshadow/eyeshadow_plum_noir.tres" id="18_c_shadow2"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeliner/eyeliner_espresso.tres" id="19_c_liner1"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeliner/eyeliner_midnight_black.tres" id="20_c_liner2"]
+[ext_resource type="Resource" path="res://data/cosmetics/lipstick/lipstick_nude_petal.tres" id="21_c_lips1"]
+[ext_resource type="Resource" path="res://data/cosmetics/lipstick/lipstick_crimson_velvet.tres" id="22_c_lips2"]
 
 [resource]
 script = ExtResource("1_si")
 owned_clothing = [ExtResource("2_top"), ExtResource("6_top_chic"), ExtResource("7_top_sporty"), ExtResource("3_bot"), ExtResource("8_bot_chic"), ExtResource("9_bot_sporty"), ExtResource("4_sho"), ExtResource("10_sho_party"), ExtResource("11_sho_sporty"), ExtResource("5_dre"), ExtResource("12_dre_party")]
 equipped_clothing = [ExtResource("2_top"), ExtResource("3_bot"), ExtResource("4_sho")]
+owned_cosmetics = [ExtResource("13_c_base1"), ExtResource("14_c_base2"), ExtResource("15_c_blush1"), ExtResource("16_c_blush2"), ExtResource("17_c_shadow1"), ExtResource("18_c_shadow2"), ExtResource("19_c_liner1"), ExtResource("20_c_liner2"), ExtResource("21_c_lips1"), ExtResource("22_c_lips2")]

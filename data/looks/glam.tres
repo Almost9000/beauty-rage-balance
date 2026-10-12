@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="MakeupLook" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://core/resources/makeup_look.gd" id="1_look"]
+[ext_resource type="Resource" path="res://data/cosmetics/base/base_porcelain.tres" id="2_base"]
+[ext_resource type="Resource" path="res://data/cosmetics/blush/blush_soft_rose.tres" id="3_blush"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeshadow/eyeshadow_plum_noir.tres" id="4_shadow"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeliner/eyeliner_midnight_black.tres" id="5_liner"]
+[ext_resource type="Resource" path="res://data/cosmetics/lipstick/lipstick_crimson_velvet.tres" id="6_lips"]
+
+[resource]
+script = ExtResource("1_look")
+id = &"look_glam"
+display_name = "Glam"
+layers = {
+0: {
+"accuracy": 1.0,
+"cosmetic": ExtResource("2_base"),
+"opacity": 0.8,
+"smudge": Vector2(0, 0)
+},
+1: {
+"accuracy": 1.0,
+"cosmetic": ExtResource("3_blush"),
+"opacity": 0.75,
+"smudge": Vector2(0, 0)
+},
+2: {
+"accuracy": 1.0,
+"cosmetic": ExtResource("4_shadow"),
+"opacity": 0.85,
+"smudge": Vector2(0, 0)
+},
+3: {
+"accuracy": 1.0,
+"cosmetic": ExtResource("5_liner"),
+"opacity": 0.95,
+"smudge": Vector2(0, 0)
+},
+4: {
+"accuracy": 1.0,
+"cosmetic": ExtResource("6_lips"),
+"opacity": 0.95,
+"smudge": Vector2(0, 0)
+}
+}

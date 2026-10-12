@@ -26,6 +26,7 @@ func _ready() -> void:
 	_setup_cycle_section()
 	_setup_money_section()
 	_setup_outfit_section()
+	_setup_makeup_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
 
 var _capture_path: String = ""
@@ -40,6 +41,7 @@ func toggle_panel() -> void:
 	_panel_root.visible = not _panel_root.visible
 	if _panel_root.visible:
 		_refresh_watches()
+		_sync_makeup_sliders_from_look()
 
 func _process(delta: float) -> void:
 	if not _capture_path.is_empty():
@@ -465,6 +467,105 @@ func _on_reset_outfit_pressed() -> void:
 	var inv: Node = _get_inventory_manager()
 	if inv and inv.has_method("reset_state"):
 		inv.call("reset_state")
+
+var _makeup_sliders: Dictionary = {}
+var _makeup_slider_labels: Dictionary = {}
+
+func _setup_makeup_section() -> void:
+	var makeup_section: Container = add_section("Makeup")
+	add_watch(makeup_section, "Current Look", func() -> String:
+		var inv: Node = _get_inventory_manager()
+		if inv and "current_look" in inv and inv.current_look != null:
+			var look: MakeupLook = inv.current_look as MakeupLook
+			var name_str: String = look.display_name if not look.display_name.is_empty() else String(look.id)
+			return "%s (score: %.2f)" % [name_str, look.score()]
+		return "(none)"
+	)
+
+	add_button(makeup_section, "Apply Natural Look", _on_apply_natural_look_pressed)
+	add_button(makeup_section, "Apply Glam Look", _on_apply_glam_look_pressed)
+	add_button(makeup_section, "Clear Look", _on_clear_look_pressed)
+
+	_setup_makeup_slider(makeup_section, "Base Opacity", Enums.MakeupLayer.BASE)
+	_setup_makeup_slider(makeup_section, "Blush Opacity", Enums.MakeupLayer.BLUSH)
+	_setup_makeup_slider(makeup_section, "Eyeshadow Opacity", Enums.MakeupLayer.EYESHADOW)
+	_setup_makeup_slider(makeup_section, "Eyeliner Opacity", Enums.MakeupLayer.EYELINER)
+	_setup_makeup_slider(makeup_section, "Lipstick Opacity", Enums.MakeupLayer.LIPSTICK)
+
+func _setup_makeup_slider(parent: Container, label_title: String, layer: Enums.MakeupLayer) -> void:
+	var vbox: VBoxContainer = VBoxContainer.new()
+	var lbl: Label = Label.new()
+	lbl.text = "%s: 0.00" % label_title
+	vbox.add_child(lbl)
+
+	var slider: HSlider = HSlider.new()
+	slider.min_value = 0.0
+	slider.max_value = 1.0
+	slider.step = 0.05
+	slider.value = 0.0
+	slider.value_changed.connect(func(val: float) -> void:
+		lbl.text = "%s: %.2f" % [label_title, val]
+		_on_makeup_slider_changed(layer, val)
+	)
+	vbox.add_child(slider)
+	parent.add_child(vbox)
+
+	_makeup_sliders[layer] = slider
+	_makeup_slider_labels[layer] = { "label": lbl, "title": label_title }
+
+func _on_makeup_slider_changed(layer: Enums.MakeupLayer, val: float) -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and "current_look" in inv and inv.current_look != null:
+		var look: MakeupLook = inv.current_look as MakeupLook
+		if look.has_layer(layer):
+			look.get_layer(layer)["opacity"] = val
+		elif look.layers.has(int(layer)):
+			look.layers[int(layer)]["opacity"] = val
+
+	var tree: SceneTree = get_tree()
+	if tree:
+		var avatar: Node = tree.root.find_child("Avatar", true, false)
+		if avatar:
+			var fm: FaceMakeup = avatar.find_child("FaceMakeup", true, false) as FaceMakeup
+			if fm:
+				fm.set_layer_opacity(layer, val)
+
+func _sync_makeup_sliders_from_look() -> void:
+	var inv: Node = _get_inventory_manager()
+	var look: MakeupLook = inv.current_look if (inv and "current_look" in inv) else null
+	for layer_variant: Variant in _makeup_sliders.keys():
+		var layer: Enums.MakeupLayer = layer_variant as Enums.MakeupLayer
+		var slider: HSlider = _makeup_sliders[layer]
+		var info: Dictionary = _makeup_slider_labels[layer]
+		var lbl: Label = info["label"]
+		var title: String = info["title"]
+		var val: float = 0.0
+		if look != null and look.has_layer(layer):
+			val = float(look.get_layer(layer).get("opacity", 0.0))
+		slider.set_value_no_signal(val)
+		lbl.text = "%s: %.2f" % [title, val]
+
+func _on_apply_natural_look_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("set_look"):
+		var look: MakeupLook = load("res://data/looks/natural.tres") as MakeupLook
+		if look:
+			inv.call("set_look", look.duplicate())
+			_sync_makeup_sliders_from_look()
+
+func _on_apply_glam_look_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("set_look"):
+		var look: MakeupLook = load("res://data/looks/glam.tres") as MakeupLook
+		if look:
+			inv.call("set_look", look.duplicate())
+			_sync_makeup_sliders_from_look()
+
+func _on_clear_look_pressed() -> void:
+	var inv: Node = _get_inventory_manager()
+	if inv and inv.has_method("clear_look"):
+		inv.call("clear_look")
+		_sync_makeup_sliders_from_look()
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

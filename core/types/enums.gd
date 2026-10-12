@@ -51,3 +51,11 @@ enum OutingResult {
 	PARTIAL,
 	FAIL,
 }
+
+enum MakeupLayer {
+	BASE,
+	BLUSH,
+	EYESHADOW,
+	EYELINER,
+	LIPSTICK,
+}

@@ -2,11 +2,15 @@ extends Node
 
 signal outfit_changed(slot: Enums.Slot, item: ClothingItem)
 signal item_added(item: ClothingItem)
+signal cosmetic_added(item: CosmeticItem)
+signal look_changed(look: MakeupLook)
 
 const STARTING_INVENTORY_PATH: String = "res://data/starting_inventory.tres"
 
 var owned_clothing: Array[ClothingItem] = []
 var equipped: Dictionary = {}  # Enums.Slot -> ClothingItem
+var owned_cosmetics: Array[CosmeticItem] = []
+var current_look: MakeupLook = null
 
 
 func _ready() -> void:
@@ -24,6 +28,8 @@ func reset_state() -> void:
 
 	owned_clothing.clear()
 	equipped.clear()
+	owned_cosmetics.clear()
+	current_look = null
 
 	var start_inv: StartingInventory = null
 	if ResourceLoader.exists(STARTING_INVENTORY_PATH):
@@ -36,6 +42,16 @@ func reset_state() -> void:
 		for item: ClothingItem in start_inv.equipped_clothing:
 			if item:
 				equip(item)
+		if "owned_cosmetics" in start_inv:
+			for cosmetic: CosmeticItem in start_inv.owned_cosmetics:
+				if cosmetic and not owns_cosmetic(cosmetic):
+					owned_cosmetics.append(cosmetic)
+		if "initial_look" in start_inv and start_inv.initial_look != null:
+			set_look(start_inv.initial_look)
+		else:
+			clear_look()
+	else:
+		clear_look()
 
 
 func add_owned(item: ClothingItem) -> void:
@@ -53,6 +69,33 @@ func owns(item: ClothingItem) -> bool:
 		if owned == item or (owned != null and not owned.id.is_empty() and owned.id == item.id):
 			return true
 	return false
+
+
+func add_owned_cosmetic(item: CosmeticItem) -> void:
+	if item == null:
+		return
+	if not owns_cosmetic(item):
+		owned_cosmetics.append(item)
+		cosmetic_added.emit(item)
+
+
+func owns_cosmetic(item: CosmeticItem) -> bool:
+	if item == null:
+		return false
+	for owned: CosmeticItem in owned_cosmetics:
+		if owned == item or (owned != null and not owned.id.is_empty() and owned.id == item.id):
+			return true
+	return false
+
+
+func set_look(look: MakeupLook) -> void:
+	current_look = look
+	look_changed.emit(current_look)
+
+
+func clear_look() -> void:
+	current_look = null
+	look_changed.emit(null)
 
 
 func equip(item: ClothingItem) -> void:
@@ -103,9 +146,26 @@ func to_dict() -> Dictionary:
 			if not ref.is_empty():
 				equipped_refs[str(slot)] = ref
 
+	var cosmetic_refs: Array[String] = []
+	for item: CosmeticItem in owned_cosmetics:
+		if item:
+			var ref: String = ResRef.to_ref(item)
+			if ref.is_empty() and not item.resource_path.is_empty():
+				ref = item.resource_path
+			if ref.is_empty():
+				ref = String(item.id)
+			if not ref.is_empty():
+				cosmetic_refs.append(ref)
+
+	var look_data: Variant = null
+	if current_look != null:
+		look_data = current_look.to_dict()
+
 	return {
 		"owned_clothing": owned_refs,
 		"equipped": equipped_refs,
+		"owned_cosmetics": cosmetic_refs,
+		"current_look": look_data,
 	}
 
 
@@ -117,6 +177,7 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 
 	owned_clothing.clear()
 	equipped.clear()
+	owned_cosmetics.clear()
 
 	var owned_refs: Array = data.get("owned_clothing", [])
 	for ref_variant: Variant in owned_refs:
@@ -133,6 +194,24 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 		if res is ClothingItem:
 			equipped[slot] = res as ClothingItem
 			outfit_changed.emit(slot, res as ClothingItem)
+
+	var cosmetic_refs: Array = data.get("owned_cosmetics", [])
+	for ref_variant: Variant in cosmetic_refs:
+		var ref: String = str(ref_variant)
+		var res: Resource = ResRef.load_ref(ref)
+		if res is CosmeticItem:
+			owned_cosmetics.append(res as CosmeticItem)
+		elif ResourceLoader.exists(ref):
+			var loaded: Resource = ResourceLoader.load(ref)
+			if loaded is CosmeticItem:
+				owned_cosmetics.append(loaded as CosmeticItem)
+
+	if data.has("current_look") and data["current_look"] != null and data["current_look"] is Dictionary:
+		current_look = MakeupLook.from_dict(data["current_look"])
+		look_changed.emit(current_look)
+	else:
+		current_look = null
+		look_changed.emit(null)
 
 
 func get_slot_source_id(slot: Enums.Slot) -> StringName:
