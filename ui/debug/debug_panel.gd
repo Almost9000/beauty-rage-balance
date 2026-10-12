@@ -28,7 +28,9 @@ func _ready() -> void:
 	_setup_outfit_section()
 	_setup_makeup_section()
 	_setup_outings_section()
+	_setup_cleaning_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
+
 
 var _capture_path: String = ""
 var _capture_frame: int = 0
@@ -703,7 +705,61 @@ func _on_skip_past_grace_pressed() -> void:
 		_refresh_watches()
 
 
+func _setup_cleaning_section() -> void:
+	var section: Container = add_section("Cleaning")
+	add_watch(section, "Clutter Count", _get_debug_clutter_count)
+	add_watch(section, "Comfort Score", _get_debug_comfort_score)
+	add_button(section, "Spawn 5 Clutter", _on_spawn_5_clutter_pressed)
+	add_button(section, "Clear All Clutter", _on_clear_all_clutter_pressed)
+
+func _get_debug_clutter_count() -> String:
+	var count: int = 0
+	var tree: SceneTree = get_tree()
+	if tree:
+		for node: Node in tree.get_nodes_in_group(&"clutter"):
+			if node is Node3D and not node.is_queued_for_deletion():
+				count += 1
+	return str(count)
+
+func _get_debug_comfort_score() -> String:
+	var tree: SceneTree = get_tree()
+	if tree:
+		var comfort_nodes: Array[Node] = tree.get_nodes_in_group(&"comfort_score")
+		if not comfort_nodes.is_empty():
+			var cs: Node = comfort_nodes[0]
+			if "current_comfort" in cs:
+				var c_val: float = float(cs.current_comfort)
+				var r_val: float = 0.0
+				if cs.has_method("get_current_rate"):
+					r_val = float(cs.call("get_current_rate"))
+				return "%.2f (rate: %+.2f/h)" % [c_val, r_val]
+	return "--"
+
+func _on_spawn_5_clutter_pressed() -> void:
+	var tree: SceneTree = get_tree()
+	if not tree:
+		return
+	var spawners: Array[Node] = tree.get_nodes_in_group(&"clutter_spawner")
+	if spawners.is_empty():
+		return
+	var spawner: Node = spawners[0]
+	if spawner and spawner.has_method("spawn"):
+		for _i in range(5):
+			spawner.call("spawn")
+	_refresh_watches()
+
+func _on_clear_all_clutter_pressed() -> void:
+	var tree: SceneTree = get_tree()
+	if not tree:
+		return
+	for node: Node in tree.get_nodes_in_group(&"clutter"):
+		if is_instance_valid(node) and not node.is_queued_for_deletion():
+			node.queue_free()
+	_refresh_watches()
+
+
 func add_section(title: String) -> Container:
+
 	var section_panel: VBoxContainer = VBoxContainer.new()
 	section_panel.name = title.validate_node_name()
 

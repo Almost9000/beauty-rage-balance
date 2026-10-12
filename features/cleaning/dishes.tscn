@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://clutt3rd1sh001"]
+
+[ext_resource type="Script" path="res://core/components/clutter.gd" id="1_clut"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="2_int"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dishes"]
+albedo_color = Color(0.88, 0.92, 0.96, 1)
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dishes"]
+material = SubResource("StandardMaterial3D_dishes")
+top_radius = 0.22
+bottom_radius = 0.16
+height = 0.12
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_int"]
+size = Vector3(1.2, 1.0, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_col"]
+size = Vector3(0.45, 0.2, 0.45)
+
+[node name="Dishes" type="Node3D" groups=["clutter"]]
+script = ExtResource("1_clut")
+clutter_type = &"dishes"
+weight = 1.0
+clean_time_min = 5
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("CylinderMesh_dishes")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 20
+collision_mask = 0
+script = ExtResource("2_int")
+prompt_text = "Clean dishes (5 min)"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_int")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 16
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("BoxShape3D_col")

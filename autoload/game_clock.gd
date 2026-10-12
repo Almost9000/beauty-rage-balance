@@ -2,7 +2,9 @@ extends Node
 
 signal minute_ticked(now_minute: int)
 signal hour_changed(hour: int)
+signal hour_ticked(hour: int)
 signal day_started(day: int)
+
 signal time_skipped(from_minute: int, to_minute: int)
 signal skip_started(minutes: int)
 signal skip_finished()
@@ -104,6 +106,7 @@ func skip(minutes: int) -> void:
 	var final_hour: int = get_hour()
 	if final_hour != initial_hour:
 		hour_changed.emit(final_hour)
+		hour_ticked.emit(final_hour)
 
 	_is_skipping = false
 	skip_finished.emit()
@@ -120,6 +123,8 @@ func _step_minute() -> void:
 	var curr_hour: int = get_hour()
 	if curr_hour != prev_hour:
 		hour_changed.emit(curr_hour)
+		hour_ticked.emit(curr_hour)
+
 
 	_fire_due_countdowns()
 

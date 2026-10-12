@@ -2,6 +2,8 @@ extends Node
 
 signal level_changing(from_id: String, to_id: String)
 signal level_changed(level_id: String)
+signal flush_level_state
+
 
 const FADE_DURATION: float = 0.3
 
@@ -96,6 +98,10 @@ func get_level_state(level_id: String) -> Dictionary:
 	if state is Dictionary:
 		return (state as Dictionary).duplicate(true)
 	return {}
+
+func request_flush() -> void:
+	flush_level_state.emit()
+
 
 func reset_state() -> void:
 	_level_states.clear()

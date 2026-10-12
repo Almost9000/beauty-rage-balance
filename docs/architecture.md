@@ -48,6 +48,19 @@ The autoload execution and registration order in `project.godot` is fixed as fol
 |---|---|---|---|---|
 | `outing_scheduled` | `outing_ref: String, departure_min: int, partner_ref: String` | `OutingManager` | `Phone`, `NarrativeManager` | Task 15 |
 | `item_purchased` | `item_ref: String, price_cents: int` | `ShopApp`, `ThriftStore` | `InventoryManager`, `FinanceManager` | Task 19 |
-| `clutter_cleaned` | `amount: int` | `Clutter` | `DayDirector`, `StatusManager` | Task 20 |
+| `clutter_cleaned` | `clutter_type: StringName, weight: float` | `Clutter` | `DayDirector`, `StatusManager` | Task 20 |
 | `dog_need_changed` | `dog_id: StringName, need: StringName, value: float` | `DogBrain` | `HUD`, `DayDirector` | Task 21 |
 | `narrative_requested` | `event_id: StringName` | Systems / triggers | `NarrativeManager` | Task 23 |
+
+---
+
+## 4. Per-Level State Persistence & Flush Contract
+
+`SceneRouter` maintains per-level state across scene transitions and save operations:
+- **API**: `store_level_state(level_id: String, data: Dictionary)` and `get_level_state(level_id: String) -> Dictionary`.
+- **Flush Signal**: `SceneRouter.flush_level_state` is emitted via `SceneRouter.request_flush()`.
+- **Level Responsibilities**:
+  - On `SceneRouter.level_changing` (when leaving) and `SceneRouter.flush_level_state`, the active level writes its transient state (e.g. clutter list, timestamps) into `SceneRouter.store_level_state()`.
+  - On level load/ready, the level queries `SceneRouter.get_level_state()`, restores stored entities, and simulates elapsed gameplay time.
+- **Save Coordination**: Before serializing game state to disk (`SaveManager`, Task 24), `SceneRouter.request_flush()` is called so the active level commits its latest state into `SceneRouter` prior to `to_dict()`.
+
