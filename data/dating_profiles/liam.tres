@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DatingProfile" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://core/resources/dating_profile.gd" id="1_profile"]
+[ext_resource type="Texture2D" path="res://assets/textures/dating/liam_photo.png" id="2_photo"]
+[ext_resource type="Resource" path="res://data/outings/date_night.tres" id="3_outing"]
+
+[resource]
+script = ExtResource("1_profile")
+id = &"liam"
+display_name = "Liam"
+age = 30
+bio = "High school teacher & marathon runner. Teaching literature by day, training for half-marathons by dawn. Looking for someone grounded and kind."
+photo = ExtResource("2_photo")
+green_flags = Array[String](["Dedicated and reliable", "Great with kids and family", "Positive energy"])
+red_flags = Array[String](["Tries to fix every problem with a motivational speech", "Wakes up at 5:00 AM on weekends and expects you to as well"])
+match_chance = 0.8
+date_outing = ExtResource("3_outing")
+tags = Array[String](["fitness", "education", "morning_person"])

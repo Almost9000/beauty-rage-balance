@@ -99,6 +99,16 @@ func _setup_apps() -> void:
 				if cal:
 					register_app(cal)
 
+	# If dating app wasn't loaded from app_scenes, load default dating app
+	if not _installed_apps.has(&"dating"):
+		var dating_path := "res://features/phone/apps/dating/dating_app.tscn"
+		if ResourceLoader.exists(dating_path):
+			var dating_scene: PackedScene = load(dating_path) as PackedScene
+			if dating_scene:
+				var dating: AppBase = dating_scene.instantiate() as AppBase
+				if dating:
+					register_app(dating)
+
 	_refresh_home_screen()
 
 

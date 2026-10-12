@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DatingProfile" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://core/resources/dating_profile.gd" id="1_profile"]
+[ext_resource type="Texture2D" path="res://assets/textures/dating/leo_photo.png" id="2_photo"]
+[ext_resource type="Resource" path="res://data/outings/date_night.tres" id="3_outing"]
+
+[resource]
+script = ExtResource("1_profile")
+id = &"leo"
+display_name = "Leo"
+age = 26
+bio = "Freelance photographer & climber. Always chasing golden hour. Looking for someone to explore hidden cafes and boulder on weekends."
+photo = ExtResource("2_photo")
+green_flags = Array[String](["Adventurous spirit", "Takes great photos of you", "Respects your personal space"])
+red_flags = Array[String](["Doesn't believe in labels", "Hasn't owned bed sheets with a thread count over 100"])
+match_chance = 0.7
+date_outing = ExtResource("3_outing")
+tags = Array[String](["outdoors", "creative", "casual"])

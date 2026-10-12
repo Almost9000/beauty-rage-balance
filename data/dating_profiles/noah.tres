@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DatingProfile" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://core/resources/dating_profile.gd" id="1_profile"]
+[ext_resource type="Texture2D" path="res://assets/textures/dating/noah_photo.png" id="2_photo"]
+[ext_resource type="Resource" path="res://data/outings/date_night.tres" id="3_outing"]
+
+[resource]
+script = ExtResource("1_profile")
+id = &"noah"
+display_name = "Noah"
+age = 32
+bio = "Landscape architect & volunteer gardener. Building community gardens and native plant habitats. Appreciates quiet mornings, tea, and dry humor."
+photo = ExtResource("2_photo")
+green_flags = Array[String](["Grounded and dependable", "Generous with time and care", "Comfortable with silence"])
+red_flags = Array[String](["Takes days to respond to text messages", "Emotionally guarded about the past"])
+match_chance = 0.75
+date_outing = ExtResource("3_outing")
+tags = Array[String](["nature", "community", "calm"])
