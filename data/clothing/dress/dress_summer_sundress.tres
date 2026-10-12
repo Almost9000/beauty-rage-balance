@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ClothingItem" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/resources/clothing_item.gd" id="1_ci"]
+[ext_resource type="PackedScene" path="res://assets/models/clothing/dress/dress_peasant_ensemble.glb" id="2_glb"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="3_mod"]
+
+[sub_resource type="Resource" id="Resource_mod_sundress"]
+script = ExtResource("3_mod")
+stat = 0
+kind = 1
+value = 1.2
+source_id = &"outfit:dress"
+duration_min = -1
+label = "Breezy Confidence"
+
+[resource]
+script = ExtResource("1_ci")
+id = &"dress_summer_sundress"
+display_name = "Floral Summer Sundress"
+slot = 2
+mesh_scene = ExtResource("2_glb")
+hides_regions = 18
+style_tags = Array[StringName]([&"casual", &"chic", &"one_piece"])
+condition = 1.0
+price_cents = 4800
+modifiers = Array[ExtResource("3_mod")]([SubResource("Resource_mod_sundress")])

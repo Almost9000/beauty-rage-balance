@@ -1,0 +1,84 @@
+[gd_resource type="Resource" script_class="ShopCatalog" load_steps=23 format=3]
+
+[ext_resource type="Script" path="res://core/resources/shop_catalog.gd" id="1_sc"]
+[ext_resource type="Script" path="res://core/resources/shop_listing.gd" id="2_sl"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_vintage_corset.tres" id="3_top_corset"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_summer_sundress.tres" id="4_dress_sundress"]
+[ext_resource type="Resource" path="res://data/clothing/bottom/bottom_pleated_miniskirt.tres" id="5_bot_miniskirt"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_combat_boots.tres" id="6_sho_boots"]
+[ext_resource type="Resource" path="res://data/cosmetics/lipstick/lipstick_cherry_bomb.tres" id="7_cos_cherry"]
+[ext_resource type="Resource" path="res://data/cosmetics/eyeshadow/eyeshadow_sunset_gold.tres" id="8_cos_sunset"]
+[ext_resource type="Resource" path="res://data/clothing/top/top_chic_blouse.tres" id="9_top_chic"]
+[ext_resource type="Resource" path="res://data/clothing/dress/dress_party_gown.tres" id="10_dre_gown"]
+[ext_resource type="Resource" path="res://data/clothing/shoes/shoes_party_heels.tres" id="11_sho_heels"]
+[ext_resource type="Resource" path="res://data/cosmetics/lipstick/lipstick_crimson_velvet.tres" id="12_cos_crimson"]
+
+[sub_resource type="Resource" id="Resource_listing_1"]
+script = ExtResource("2_sl")
+item = ExtResource("3_top_corset")
+base_price_cents = 3500
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_2"]
+script = ExtResource("2_sl")
+item = ExtResource("4_dress_sundress")
+base_price_cents = 4800
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_3"]
+script = ExtResource("2_sl")
+item = ExtResource("5_bot_miniskirt")
+base_price_cents = 2800
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_4"]
+script = ExtResource("2_sl")
+item = ExtResource("6_sho_boots")
+base_price_cents = 4200
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_5"]
+script = ExtResource("2_sl")
+item = ExtResource("7_cos_cherry")
+base_price_cents = 1800
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_6"]
+script = ExtResource("2_sl")
+item = ExtResource("8_cos_sunset")
+base_price_cents = 2200
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_7"]
+script = ExtResource("2_sl")
+item = ExtResource("9_top_chic")
+base_price_cents = 2200
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_8"]
+script = ExtResource("2_sl")
+item = ExtResource("10_dre_gown")
+base_price_cents = 3500
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_9"]
+script = ExtResource("2_sl")
+item = ExtResource("11_sho_heels")
+base_price_cents = 2500
+weight = 1.0
+
+[sub_resource type="Resource" id="Resource_listing_10"]
+script = ExtResource("2_sl")
+item = ExtResource("12_cos_crimson")
+base_price_cents = 2000
+weight = 1.0
+
+[resource]
+script = ExtResource("1_sc")
+listings = Array[ExtResource("2_sl")]([SubResource("Resource_listing_1"), SubResource("Resource_listing_2"), SubResource("Resource_listing_3"), SubResource("Resource_listing_4"), SubResource("Resource_listing_5"), SubResource("Resource_listing_6"), SubResource("Resource_listing_7"), SubResource("Resource_listing_8"), SubResource("Resource_listing_9"), SubResource("Resource_listing_10")])
+deals_per_day = 4
+min_discount = 0.1
+max_discount = 0.4
+flash_sale_chance = 0.5
+flash_sale_duration_min = 120
+flash_sale_discount = 0.5

@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ClothingItem" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/resources/clothing_item.gd" id="1_ci"]
+[ext_resource type="PackedScene" path="res://assets/models/clothing/top/top_peasant_tunic.glb" id="2_glb"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="3_mod"]
+
+[sub_resource type="Resource" id="Resource_mod_corset"]
+script = ExtResource("3_mod")
+stat = 0
+kind = 1
+value = 1.0
+source_id = &"outfit:top"
+duration_min = -1
+label = "Vintage Elegance"
+
+[resource]
+script = ExtResource("1_ci")
+id = &"top_vintage_corset"
+display_name = "Vintage Velvet Corset"
+slot = 0
+mesh_scene = ExtResource("2_glb")
+hides_regions = 2
+style_tags = Array[StringName]([&"chic", &"formal", &"party"])
+condition = 1.0
+price_cents = 3500
+modifiers = Array[ExtResource("3_mod")]([SubResource("Resource_mod_corset")])

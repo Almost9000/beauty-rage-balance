@@ -1,0 +1,256 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://features/phone/apps/shop/shop_app.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flash_banner"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.85, 0.28, 0.12, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.6, 0.2, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.16, 0.22, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.7, 0.5, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cart_drawer"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.1, 0.12, 0.18, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.4, 0.55, 0.7)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_checkout_btn"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.9, 0.25, 0.5, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.5, 0.75, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cart_btn"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(0.2, 0.24, 0.35, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.45, 0.65, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="ShopApp" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BackButton" type="Button" parent="VBoxContainer/Header"]
+custom_minimum_size = Vector2(40, 32)
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 0
+text = "‹ Back"
+flat = true
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.4, 0.65, 1)
+theme_override_font_sizes/font_size = 16
+text = "Chicly"
+vertical_alignment = 1
+
+[node name="CartButton" type="Button" parent="VBoxContainer/Header"]
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+mouse_filter = 0
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_cart_btn")
+text = "🛒 Cart (0)"
+
+[node name="FlashBanner" type="PanelContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_flash_banner")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/FlashBanner"]
+layout_mode = 2
+
+[node name="FlashLabel" type="Label" parent="VBoxContainer/FlashBanner/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "⚡ FLASH SALE! 50% OFF (1h 45m left)"
+horizontal_alignment = 1
+
+[node name="StatusMessagePanel" type="PanelContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_status")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/StatusMessagePanel"]
+layout_mode = 2
+
+[node name="StatusMessageLabel" type="Label" parent="VBoxContainer/StatusMessagePanel/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Item added to cart!"
+horizontal_alignment = 1
+
+[node name="DealsHeader" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="DealsLabel" type="Label" parent="VBoxContainer/DealsHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "TODAY'S DEALS"
+
+[node name="ListingsScroll" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ListingsContainer" type="VBoxContainer" parent="VBoxContainer/ListingsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="CartDrawer" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cart_drawer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CartDrawer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CartHeader" type="HBoxContainer" parent="CartDrawer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="CartTitle" type="Label" parent="CartDrawer/VBoxContainer/CartHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Shopping Cart"
+vertical_alignment = 1
+
+[node name="CartCloseButton" type="Button" parent="CartDrawer/VBoxContainer/CartHeader"]
+custom_minimum_size = Vector2(32, 28)
+layout_mode = 2
+focus_mode = 0
+text = "✕ Close"
+flat = true
+
+[node name="CartEmptyLabel" type="Label" parent="CartDrawer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Your cart is empty.
+Browse today's deals to add items!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CartScroll" type="ScrollContainer" parent="CartDrawer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CartItemsContainer" type="VBoxContainer" parent="CartDrawer/VBoxContainer/CartScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="CartFooter" type="VBoxContainer" parent="CartDrawer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SubtotalLabel" type="Label" parent="CartDrawer/VBoxContainer/CartFooter"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Total: $0.00"
+
+[node name="CartMessageLabel" type="Label" parent="CartDrawer/VBoxContainer/CartFooter"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+
+[node name="CheckoutButton" type="Button" parent="CartDrawer/VBoxContainer/CartFooter"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_checkout_btn")
+text = "Checkout ($0.00)"
