@@ -19,8 +19,29 @@ var _lock_reasons: Dictionary = {}
 
 func _ready() -> void:
 	add_to_group(&"player")
+	_connect_phone()
 	if not is_input_locked():
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _connect_phone() -> void:
+	var phone: Node = get_node_or_null("/root/Phone")
+	if phone:
+		if phone.has_signal("opened") and not phone.is_connected("opened", _on_phone_opened):
+			phone.connect("opened", _on_phone_opened)
+		if phone.has_signal("closed") and not phone.is_connected("closed", _on_phone_closed):
+			phone.connect("closed", _on_phone_closed)
+		if bool(phone.get("is_open")):
+			lock_input(&"phone")
+
+
+func _on_phone_opened() -> void:
+	lock_input(&"phone")
+
+
+func _on_phone_closed() -> void:
+	unlock_input(&"phone")
+
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
