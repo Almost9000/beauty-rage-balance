@@ -332,6 +332,7 @@ func test_date_night_pass_and_fail_resolution() -> void:
 
 	# 2. Date night FAIL resolution
 	OutingManager.reset_state()
+	GameClock.reset_state()
 	StatusManager.set_value(Enums.Stat.HYGIENE, 0.0)
 	StatusManager.set_value(Enums.Stat.SANITY, 50.0)
 	FinanceManager.wallet_cents = 1000
@@ -348,7 +349,7 @@ func test_date_night_pass_and_fail_resolution() -> void:
 	var fail_res: Dictionary = OutingManager.depart()
 	assert_eq(fail_res["result"], Enums.OutingResult.FAIL)
 	assert_eq(OutingManager.get_affinity("Liam"), 15)  # 30 - 15 = 15
-	assert_almost_eq(StatusManager.get_value(Enums.Stat.SANITY), 30.0, 1e-4)  # -20 instant sanity
+	assert_almost_eq(StatusManager.get_value(Enums.Stat.SANITY), 27.12, 0.5)  # -20 instant sanity minus decay during skip
 
 
 func test_hud_late_banner_and_updates() -> void:

@@ -1,0 +1,187 @@
+[gd_scene load_steps=7 format=3 uid="uid://cx1g6h7w5k9r4"]
+
+[ext_resource type="Script" path="res://features/phone/phone_shell.gd" id="1_phone"]
+[ext_resource type="PackedScene" uid="uid://b82kn1x0q8p2r" path="res://features/phone/notification_banner.tscn" id="2_banner"]
+[ext_resource type="PackedScene" uid="uid://cmeqf2xk8j5r3" path="res://features/phone/home_screen.tscn" id="3_home"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bezel"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.08, 0.09, 0.12, 0.98)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.28, 0.34, 0.46, 0.9)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 18
+shadow_offset = Vector2(0, 8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_screen"]
+bg_color = Color(0.1, 0.12, 0.18, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_island"]
+bg_color = Color(0.02, 0.02, 0.04, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Phone" type="CanvasLayer"]
+process_mode = 3
+layer = 50
+script = ExtResource("1_phone")
+
+[node name="NotificationBanner" parent="." instance=ExtResource("2_banner")]
+
+[node name="PhoneSlideContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PhoneSlideContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 24
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="PhoneSlideContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+ratio = 0.461538
+alignment_horizontal = 2
+
+[node name="PhoneBezel" type="PanelContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer"]
+custom_minimum_size = Vector2(320, 693)
+layout_mode = 2
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bezel")
+
+[node name="InnerMargin" type="MarginContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScreenPanel" type="PanelContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin"]
+clip_children = 2
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_screen")
+
+[node name="ScreenVBox" type="VBoxContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="StatusBar" type="MarginContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 2
+
+[node name="HBox" type="HBoxContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar"]
+layout_mode = 2
+alignment = 1
+
+[node name="TimeLabel" type="Label" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_colors/font_color = Color(0.9, 0.92, 0.98, 1)
+theme_override_font_sizes/font_size = 11
+text = "07:00"
+
+[node name="DynamicIsland" type="Panel" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar/HBox"]
+custom_minimum_size = Vector2(64, 14)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_island")
+
+[node name="StatusIconsHBox" type="HBoxContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = 6
+
+[node name="SignalLabel" type="Label" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar/HBox/StatusIconsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 0.9)
+theme_override_font_sizes/font_size = 10
+text = "5G"
+
+[node name="WifiLabel" type="Label" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar/HBox/StatusIconsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 0.9)
+theme_override_font_sizes/font_size = 10
+text = "Wi-Fi"
+
+[node name="BatteryLabel" type="Label" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/StatusBar/HBox/StatusIconsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 0.75, 0.9)
+theme_override_font_sizes/font_size = 10
+text = "95%"
+
+[node name="ScreenContent" type="MarginContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HomeScreen" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/ScreenContent" instance=ExtResource("3_home")]
+layout_mode = 2
+
+[node name="AppContainer" type="Control" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/ScreenContent"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="NavigationBar" type="HBoxContainer" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="NavBackBtn" type="Button" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/NavigationBar"]
+custom_minimum_size = Vector2(40, 26)
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 0
+theme_override_font_sizes/font_size = 12
+text = "◀"
+flat = true
+
+[node name="NavHomeBtn" type="Button" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/NavigationBar"]
+custom_minimum_size = Vector2(60, 26)
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 0
+theme_override_font_sizes/font_size = 12
+text = "●"
+flat = true
+
+[node name="NavCloseBtn" type="Button" parent="PhoneSlideContainer/MarginContainer/AspectRatioContainer/PhoneBezel/InnerMargin/ScreenPanel/ScreenVBox/NavigationBar"]
+custom_minimum_size = Vector2(40, 26)
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 0
+theme_override_font_sizes/font_size = 12
+text = "▼"
+flat = true
