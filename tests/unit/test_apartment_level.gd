@@ -107,10 +107,12 @@ func test_player_spawning_at_bed_and_door() -> void:
 	var inst = load(APARTMENT_SCENE_PATH).instantiate()
 	add_child_autoqfree(inst)
 
-	var player = Node3D.new()
-	player.name = "Player"
-	player.add_to_group(&"player")
-	inst.add_child(player)
+	var player = inst.get_node_or_null("Player") as Node3D
+	if not player:
+		player = Node3D.new()
+		player.name = "Player"
+		player.add_to_group(&"player")
+		inst.add_child(player)
 
 	# Test 1: Spawning at default (by bed)
 	SceneRouter._pending_spawn_id = &"default"

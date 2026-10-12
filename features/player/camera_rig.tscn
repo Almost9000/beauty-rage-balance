@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7m2camrig01"]
+
+[ext_resource type="Script" path="res://features/player/camera_rig.gd" id="1_cam_script"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_arm"]
+radius = 0.15
+
+[node name="CameraRig" type="Node3D"]
+script = ExtResource("1_cam_script")
+
+[node name="YawPivot" type="Node3D" parent="."]
+
+[node name="PitchPivot" type="Node3D" parent="YawPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.978148, 0.207912, 0, -0.207912, 0.978148, 0, 0, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="YawPivot/PitchPivot"]
+collision_mask = 1
+shape = SubResource("SphereShape3D_arm")
+spring_length = 3.5
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="YawPivot/PitchPivot/SpringArm3D"]
+current = true
+fov = 70.0

@@ -81,11 +81,43 @@ func _process(delta: float) -> void:
 		_watch_timer = 0.0
 		_refresh_watches()
 
+var _camera_focus_button: Button = null
+var _camera_focused_vanity: bool = false
+
 func _setup_world_section() -> void:
 	var world_section: Container = add_section("World")
 	add_button(world_section, "Reload Level", _on_reload_level_pressed)
 	add_button(world_section, "Go to Apartment", _on_go_to_apartment_pressed)
 	add_watch(world_section, "Current Level", _get_current_level_id)
+	_camera_focus_button = add_button(world_section, "Camera: focus vanity marker", _on_toggle_camera_focus_vanity_pressed)
+
+func _on_toggle_camera_focus_vanity_pressed() -> void:
+	var current_scene: Node = get_tree().current_scene
+	if not current_scene:
+		return
+
+	var camera_rig: Node = current_scene.find_child("CameraRig", true, false)
+	if not camera_rig:
+		push_warning("DebugPanel: CameraRig not found in current scene")
+		return
+
+	var vanity_marker: Node3D = current_scene.find_child("vanity", true, false) as Node3D
+	if not vanity_marker:
+		push_warning("DebugPanel: Station marker 'vanity' not found")
+		return
+
+	if not _camera_focused_vanity:
+		if camera_rig.has_method("focus"):
+			camera_rig.call("focus", vanity_marker, 0.4)
+			_camera_focused_vanity = true
+			if _camera_focus_button:
+				_camera_focus_button.text = "Camera: release vanity marker"
+	else:
+		if camera_rig.has_method("release"):
+			camera_rig.call("release", 0.4)
+			_camera_focused_vanity = false
+			if _camera_focus_button:
+				_camera_focus_button.text = "Camera: focus vanity marker"
 
 func _on_reload_level_pressed() -> void:
 	var current_scene: Node = get_tree().current_scene

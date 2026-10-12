@@ -1,0 +1,44 @@
+[gd_scene load_steps=8 format=3 uid="uid://c8player001tscn"]
+
+[ext_resource type="Script" path="res://features/player/player_controller.gd" id="1_player_script"]
+[ext_resource type="Material" path="res://assets/materials/furniture.tres" id="2_player_mat"]
+[ext_resource type="Script" path="res://features/player/interaction_probe.gd" id="3_probe_script"]
+[ext_resource type="PackedScene" path="res://features/player/camera_rig.tscn" id="4_cam_rig_scene"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.3
+height = 1.75
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
+material = ExtResource("2_player_mat")
+radius = 0.3
+height = 1.75
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_probe"]
+size = Vector3(1.2, 1.5, 1.5)
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_player_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="AvatarMount" type="Node3D" parent="."]
+
+[node name="PlaceholderMesh" type="MeshInstance3D" parent="AvatarMount"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+mesh = SubResource("CapsuleMesh_player")
+
+[node name="InteractionProbe" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("3_probe_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionProbe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -1)
+shape = SubResource("BoxShape3D_probe")
+
+[node name="CameraRig" parent="." instance=ExtResource("4_cam_rig_scene")]
