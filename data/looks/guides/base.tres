@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="MakeupGuide" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resources/makeup_guide.gd" id="1_guide"]
+
+[resource]
+script = ExtResource("1_guide")
+layer = 0
+points = PackedVector2Array(0.3, 0.25, 0.5, 0.2, 0.7, 0.25, 0.75, 0.5, 0.68, 0.75, 0.5, 0.82, 0.32, 0.75, 0.25, 0.5, 0.3, 0.25)
+width = 0.06
+time_cost_min = 8
+opacity_range = Vector2(0.25, 0.95)
+max_smudge = 0.02

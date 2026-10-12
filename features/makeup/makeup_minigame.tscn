@@ -1,0 +1,234 @@
+[gd_scene load_steps=5 format=3 uid="uid://m4k3upm1n1g4m3"]
+
+[ext_resource type="Script" path="res://features/makeup/makeup_minigame.gd" id="1_mmg"]
+[ext_resource type="Theme" path="res://ui/theme/brb_theme.tres" id="2_thm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sidebar"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.1, 0.12, 0.18, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.24, 0.34, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_canvas"]
+bg_color = Color(0.05, 0.06, 0.1, 0.15)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.5, 0.9, 0.4)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="MakeupMinigame" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_mmg")
+
+[node name="PanelRoot" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_thm")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "VANITY STATION"
+
+[node name="StepLabel" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.9, 1)
+theme_override_font_sizes/font_size = 15
+text = "Step 1 of 5: Base"
+
+[node name="Spacer" type="Control" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "✕"
+
+[node name="MainHBox" type="HBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Sidebar" type="PanelContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sidebar")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LayerTitle" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Layer Selection"
+
+[node name="CosmeticsHeader" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.65, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "Choose cosmetic:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CosmeticsList" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="HSeparator" type="HSeparator" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Actions" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ApplyButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer/Actions"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "Apply Layer"
+
+[node name="AutoTraceButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer/Actions"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Auto-Trace"
+
+[node name="ClearStrokeButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer/Actions"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Clear Stroke"
+
+[node name="SkipButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/Sidebar/MarginContainer/VBoxContainer/Actions"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+text = "Skip Layer"
+
+[node name="CenterArea" type="MarginContainer" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TracingCanvas" type="Panel" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/CenterArea"]
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_canvas")
+
+[node name="GuideLine" type="Line2D" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/CenterArea/TracingCanvas"]
+default_color = Color(0.75, 0.65, 1, 0.55)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="StrokeLine" type="Line2D" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/CenterArea/TracingCanvas"]
+default_color = Color(1, 0.85, 0.35, 0.95)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="PromptLabel" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/MainHBox/CenterArea/TracingCanvas"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Click and drag to trace the guide line"
+horizontal_alignment = 1
+
+[node name="FinishPanel" type="PanelContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(420, 320)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_sidebar")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/FinishPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="FinishTitle" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/FinishPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "LOOK COMPLETE"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/FinishPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+text = "Look Score: 100%"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="PanelRoot/MarginContainer/VBoxContainer/FinishPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="SummaryVBox" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/FinishPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="FinishButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/FinishPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "Finish & Apply Look"
