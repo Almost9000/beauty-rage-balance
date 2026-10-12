@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="NarrativeEvent" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://core/resources/narrative_event.gd" id="1_event"]
+[ext_resource type="Script" path="res://core/resources/narrative_condition.gd" id="2_cond"]
+[ext_resource type="Script" path="res://core/resources/narrative_choice.gd" id="3_choice"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="4_statmod"]
+
+[sub_resource type="Resource" id="Cond_1"]
+script = ExtResource("2_cond")
+kind = 0
+min_day = 1
+max_day = 9999
+
+[sub_resource type="Resource" id="Mod_placate_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = 15.0
+source_id = &"narrative:family_marriage"
+label = "Swallowed frustration with family"
+
+[sub_resource type="Resource" id="Mod_placate_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = -10.0
+source_id = &"narrative:family_marriage"
+label = "Guilt over marital expectations"
+
+[sub_resource type="Resource" id="Choice_placate"]
+script = ExtResource("3_choice")
+stance = 0
+text = "I know, Aunt Mira. I'm focusing on career and bills right now, but I haven't given up."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_placate_rage"), SubResource("Mod_placate_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_deflect_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 5.0
+source_id = &"narrative:family_marriage"
+label = "Humorous distraction"
+
+[sub_resource type="Resource" id="Choice_deflect"]
+script = ExtResource("3_choice")
+stance = 1
+text = "Did Mom show you photos of my rescue dogs instead? Maja and Čipa are plenty of commitment for me right now."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_deflect_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_assert_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = -25.0
+source_id = &"narrative:family_marriage"
+label = "Rage channeled into self-affirmation"
+
+[sub_resource type="Resource" id="Mod_assert_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 20.0
+source_id = &"narrative:family_marriage"
+label = "Affirmed independent path"
+
+[sub_resource type="Resource" id="Choice_assert"]
+script = ExtResource("3_choice")
+stance = 2
+text = "My life is whole and fulfilling as it is, Aunt Mira. Please stop treating marriage like the only measure of my happiness."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_assert_rage"), SubResource("Mod_assert_sanity")])
+set_flags = {
+"self_respect": 1
+}
+
+[resource]
+script = ExtResource("1_event")
+id = &"family_marriage"
+conditions = Array[ExtResource("2_cond")]([SubResource("Cond_1")])
+once = true
+priority = 10
+channel = &"PHONE_CALL"
+speaker = "Aunt Mira"
+lines = Array[String]([
+"Hey sweetie, I saw your cousin's wedding photos—such a gorgeous ceremony. It really got me thinking, you're not getting any younger. Have you been seeing anyone serious lately?",
+"You know your grandmother and I just want to see you settled down with someone reliable before we're too old to dance at the reception."
+])
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_placate"), SubResource("Choice_deflect"), SubResource("Choice_assert")])

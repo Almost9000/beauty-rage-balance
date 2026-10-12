@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="NarrativeEvent" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://core/resources/narrative_event.gd" id="1_event"]
+[ext_resource type="Script" path="res://core/resources/narrative_condition.gd" id="2_cond"]
+[ext_resource type="Script" path="res://core/resources/narrative_choice.gd" id="3_choice"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="4_statmod"]
+
+[sub_resource type="Resource" id="Cond_1"]
+script = ExtResource("2_cond")
+kind = 0
+min_day = 1
+max_day = 9999
+
+[sub_resource type="Resource" id="Mod_placate_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = 10.0
+source_id = &"narrative:unsolicited_appearance"
+label = "Stung by judgment"
+
+[sub_resource type="Resource" id="Mod_placate_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = -10.0
+source_id = &"narrative:unsolicited_appearance"
+label = "Appearance insecurity"
+
+[sub_resource type="Resource" id="Choice_placate"]
+script = ExtResource("3_choice")
+stance = 0
+text = "Thanks, Elena... yeah, I've had a lot of late nights with deadlines. I'll look into that cream."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_placate_rage"), SubResource("Mod_placate_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_deflect_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 5.0
+source_id = &"narrative:unsolicited_appearance"
+label = "Dry retort"
+
+[sub_resource type="Resource" id="Choice_deflect"]
+script = ExtResource("3_choice")
+stance = 1
+text = "That's just my actual human face under fluorescent lighting. It happens when you don't wear heavy foundation."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_deflect_sanity")])
+set_flags = {}
+
+[sub_resource type="Resource" id="Mod_assert_rage"]
+script = ExtResource("4_statmod")
+stat = 3
+kind = 0
+value = -20.0
+source_id = &"narrative:unsolicited_appearance"
+label = "Rage channeled into boundary"
+
+[sub_resource type="Resource" id="Mod_assert_sanity"]
+script = ExtResource("4_statmod")
+stat = 0
+kind = 0
+value = 15.0
+source_id = &"narrative:unsolicited_appearance"
+label = "Bodily autonomy defended"
+
+[sub_resource type="Resource" id="Choice_assert"]
+script = ExtResource("3_choice")
+stance = 2
+text = "I didn't ask for commentary on my face. How I look is not an invitation for unsolicited advice."
+modifiers = Array[ExtResource("4_statmod")]([SubResource("Mod_assert_rage"), SubResource("Mod_assert_sanity")])
+set_flags = {
+"self_respect": 1
+}
+
+[resource]
+script = ExtResource("1_event")
+id = &"unsolicited_appearance"
+conditions = Array[ExtResource("2_cond")]([SubResource("Cond_1")])
+once = true
+priority = 10
+channel = &"IN_PERSON"
+speaker = "Acquaintance Elena"
+lines = Array[String]([
+"Oh! You look so exhausted today, hun. Are you feeling alright?",
+"You really should try that brightening color corrector I told you about. A little coverage would make you look so much more alive."
+])
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_placate"), SubResource("Choice_deflect"), SubResource("Choice_assert")])

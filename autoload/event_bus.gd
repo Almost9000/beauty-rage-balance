@@ -12,6 +12,5 @@ signal clutter_cleaned(clutter_type: StringName, weight: float)
 
 signal dog_need_changed(dog_id: StringName, need: StringName, value: float)
 
-# Planned signals:
-# - narrative_requested(event_id: StringName) -> Task 23
+signal narrative_requested(event_id: StringName)
 
