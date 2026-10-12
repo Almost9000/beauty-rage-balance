@@ -1,0 +1,71 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1w8rdrobeu1scene"]
+
+[ext_resource type="Script" path="res://features/wardrobe/wardrobe_ui.gd" id="1_wui"]
+
+[node name="WardrobeUI" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_wui")
+
+[node name="PanelRoot" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelRoot"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "WARDROBE"
+
+[node name="Spacer" type="Control" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="PanelRoot/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "✕"
+
+[node name="HSeparator" type="HSeparator" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SlotTabBar" type="TabBar" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+tab_count = 6
+tab_0/title = "Top"
+tab_1/title = "Bottom"
+tab_2/title = "Dress"
+tab_3/title = "Shoes"
+tab_4/title = "Outerwear"
+tab_5/title = "Accessory"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelRoot/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ItemsContainer" type="VBoxContainer" parent="PanelRoot/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8

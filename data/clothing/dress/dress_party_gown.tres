@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="ClothingItem" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/resources/clothing_item.gd" id="1_ci"]
+[ext_resource type="PackedScene" path="res://assets/models/clothing/dress/dress_peasant_ensemble.glb" id="2_glb"]
+[ext_resource type="Script" path="res://core/resources/stat_modifier.gd" id="3_mod"]
+
+[sub_resource type="Resource" id="Resource_mod_sanity"]
+script = ExtResource("3_mod")
+stat = 0
+kind = 1
+value = 1.5
+source_id = &"outfit:dress"
+duration_min = -1
+label = "Gown elegance"
+
+[resource]
+script = ExtResource("1_ci")
+id = &"dress_party_gown"
+display_name = "Party Gown"
+slot = 2
+mesh_scene = ExtResource("2_glb")
+hides_regions = 18
+style_tags = Array[StringName]([&"party", &"chic", &"one_piece"])
+condition = 1.0
+price_cents = 3500
+modifiers = Array[ExtResource("3_mod")]([SubResource("Resource_mod_sanity")])
