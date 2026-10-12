@@ -5,13 +5,13 @@ const APARTMENT_PATH = "res://levels/apartment/apartment.tscn"
 func _init() -> void:
 	call_deferred("_generate_apartment")
 
-func _set_owners(node: Node, scene_root: Node, hud_node: Node) -> void:
+func _set_owners(node: Node, scene_root: Node, instanced_roots: Array) -> void:
 	for child in node.get_children():
-		if child == hud_node:
+		if child in instanced_roots:
 			child.owner = scene_root
 			continue
 		child.owner = scene_root
-		_set_owners(child, scene_root, hud_node)
+		_set_owners(child, scene_root, instanced_roots)
 
 func _generate_apartment() -> void:
 	print(">> Building Apartment graybox level...")
@@ -294,6 +294,26 @@ func _generate_apartment() -> void:
 	var hud_instance = hud_scene.instantiate()
 	root_node.add_child(hud_instance)
 
+	# 10. Temporary bed interactable (debug-only on the bed, kept disabled before PR)
+	var bed_interactable = Interactable.new()
+	bed_interactable.name = "BedInteractable"
+	bed_interactable.prompt_text = "Rest"
+	bed_interactable.enabled = false
+	bed_interactable.position = Vector3(4.8, 0.5, -3.2)
+	var bed_col = CollisionShape3D.new()
+	bed_col.name = "CollisionShape3D"
+	var bed_box = BoxShape3D.new()
+	bed_box.size = Vector3(2.2, 1.2, 2.4)
+	bed_col.shape = bed_box
+	bed_interactable.add_child(bed_col)
+	root_node.add_child(bed_interactable)
+
+	# 11. Player instance
+	var player_scene = load("res://features/player/player.tscn")
+	var player_instance = player_scene.instantiate()
+	player_instance.name = "Player"
+	root_node.add_child(player_instance)
+
 	# BAKE NAVIGATION MESH
 	print(">> Parsing and baking NavigationMesh...")
 	var source_data = NavigationMeshSourceGeometryData3D.new()
@@ -323,7 +343,7 @@ func _generate_apartment() -> void:
 		return
 
 	# Set owners recursively for scene packing
-	_set_owners(root_node, root_node, hud_instance)
+	_set_owners(root_node, root_node, [hud_instance, player_instance])
 
 	# Pack and save scene
 	var packed = PackedScene.new()
