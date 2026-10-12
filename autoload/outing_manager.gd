@@ -2,6 +2,9 @@ extends Node
 
 signal prep_started(outing: OutingData)
 signal departure_deadline_reached(outing: OutingData)
+signal outing_departed(outing: OutingData)
+signal outing_resolved(outing: OutingData, result: Enums.OutingResult, score: float)
+signal outing_missed(outing: OutingData)
 
 var active_outing: OutingData = null
 var active_departure_min: int = -1
@@ -38,6 +41,7 @@ func reset_state() -> void:
 	if clock and clock.has_method("cancel_countdown"):
 		clock.call("cancel_countdown", &"outing_prep_start")
 		clock.call("cancel_countdown", &"outing_departure_deadline")
+		clock.call("cancel_countdown", &"outing_late_grace_deadline")
 
 
 func schedule(outing: OutingData, departure_min: int, partner_ref: String = "") -> bool:
@@ -125,8 +129,190 @@ func get_checklist() -> Array[Dictionary]:
 			"label": check.label,
 			"score": s,
 			"passed": check.is_passed(s),
+			"weight": check.weight,
 		})
 	return items
+
+
+func is_late() -> bool:
+	if active_outing == null or active_departure_min <= 0:
+		return false
+	return _get_current_minute() > active_departure_min
+
+
+func get_lateness_min(departure_min: int = -1, current_min: int = -1) -> int:
+	if departure_min < 0:
+		departure_min = active_departure_min
+	if current_min < 0:
+		current_min = _get_current_minute()
+	if departure_min <= 0:
+		return 0
+	return maxi(0, current_min - departure_min)
+
+
+func calculate_penalty(outing: OutingData = null, lateness_min: int = -1) -> float:
+	if outing == null:
+		outing = active_outing
+	if outing == null:
+		return 0.0
+	if lateness_min < 0:
+		lateness_min = get_lateness_min()
+	return (float(lateness_min) / 10.0) * outing.late_penalty_per_10_min
+
+
+func evaluate(outing: OutingData = null, departure_min: int = -1, current_min: int = -1) -> Dictionary:
+	if outing == null:
+		outing = active_outing
+	if outing == null:
+		return {
+			"score": 0.0,
+			"raw_score": 0.0,
+			"result": Enums.OutingResult.FAIL,
+			"check_results": [],
+			"checklist": [],
+			"lateness_min": 0,
+			"penalty": 0.0,
+		}
+
+	if departure_min < 0:
+		departure_min = active_departure_min
+	if current_min < 0:
+		current_min = _get_current_minute()
+
+	var checklist: Array[Dictionary] = []
+	var total_weight: float = 0.0
+	var weighted_score: float = 0.0
+
+	for check: PrepCheck in outing.checks:
+		if check == null:
+			continue
+		var s: float = check.evaluate()
+		var w: float = check.weight
+		var p: bool = check.is_passed(s)
+		checklist.append({
+			"label": check.label,
+			"score": s,
+			"passed": p,
+			"weight": w,
+		})
+		weighted_score += s * w
+		total_weight += w
+
+	var raw_score: float = (weighted_score / total_weight) if total_weight > 0.0 else 1.0
+	var lateness: int = maxi(0, current_min - departure_min) if departure_min > 0 else 0
+	var penalty: float = (float(lateness) / 10.0) * outing.late_penalty_per_10_min
+	var final_score: float = clampf(raw_score - penalty, 0.0, 1.0)
+
+	var res: Enums.OutingResult = Enums.OutingResult.FAIL
+	if final_score >= outing.pass_threshold:
+		res = Enums.OutingResult.PASS
+	elif final_score >= outing.partial_threshold:
+		res = Enums.OutingResult.PARTIAL
+	else:
+		res = Enums.OutingResult.FAIL
+
+	return {
+		"score": final_score,
+		"raw_score": raw_score,
+		"result": res,
+		"check_results": checklist,
+		"checklist": checklist,
+		"lateness_min": lateness,
+		"penalty": penalty,
+	}
+
+
+func depart() -> Dictionary:
+	if active_outing == null:
+		return {}
+
+	var outing: OutingData = active_outing
+	var partner: String = active_partner_ref
+	var eval_res: Dictionary = evaluate()
+	var res_enum: Enums.OutingResult = eval_res["result"] as Enums.OutingResult
+
+	# 1. Charge bill
+	var fm: Node = get_node_or_null("/root/FinanceManager")
+	if fm and fm.has_method("charge_bill") and outing.cost_cents > 0:
+		fm.call("charge_bill", outing.cost_cents, &"outing", "%s Outing" % outing.display_name)
+
+	# 2. Clear active outing and countdowns before skipping time
+	_clear_active_outing()
+
+	# 3. Skip duration
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if clock and clock.has_method("skip") and outing.duration_min > 0:
+		clock.call("skip", outing.duration_min)
+
+	# 4. Apply modifiers with source_id = "outing:<id>"
+	var sm: Node = get_node_or_null("/root/StatusManager")
+	var mods: Array[StatModifier] = outing.get_modifiers_for_result(res_enum)
+	var source_id: StringName = StringName("outing:%s" % outing.id)
+	if sm and sm.has_method("add_modifier"):
+		for m: StatModifier in mods:
+			if m:
+				var copy: StatModifier = m.duplicate() as StatModifier
+				copy.source_id = source_id
+				sm.call("add_modifier", copy)
+
+	# 5. Affinity update
+	var delta: int = outing.get_affinity_delta(res_enum)
+	if not partner.is_empty():
+		add_affinity(partner, delta)
+
+	# 6. Emit signals
+	outing_departed.emit(outing)
+	outing_resolved.emit(outing, res_enum, eval_res["score"])
+
+	return eval_res
+
+
+func _miss_outing() -> void:
+	if active_outing == null:
+		return
+
+	var outing: OutingData = active_outing
+	var partner: String = active_partner_ref
+
+	# Apply FAIL modifiers with source_id = "outing:<id>"
+	var sm: Node = get_node_or_null("/root/StatusManager")
+	var mods: Array[StatModifier] = outing.get_modifiers_for_result(Enums.OutingResult.FAIL)
+	var source_id: StringName = StringName("outing:%s" % outing.id)
+	if sm and sm.has_method("add_modifier"):
+		for m: StatModifier in mods:
+			if m:
+				var copy: StatModifier = m.duplicate() as StatModifier
+				copy.source_id = source_id
+				sm.call("add_modifier", copy)
+
+	# Affinity penalty for FAIL
+	var delta: int = outing.get_affinity_delta(Enums.OutingResult.FAIL)
+	if not partner.is_empty():
+		add_affinity(partner, delta)
+
+	# Clear active outing without time skip and without billing
+	_clear_active_outing()
+
+	# Emit signal
+	outing_missed.emit(outing)
+
+
+func _clear_active_outing() -> void:
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if clock and clock.has_method("cancel_countdown"):
+		clock.call("cancel_countdown", &"outing_prep_start")
+		clock.call("cancel_countdown", &"outing_departure_deadline")
+		clock.call("cancel_countdown", &"outing_late_grace_deadline")
+
+	for i: int in range(_scheduled.size() - 1, -1, -1):
+		if _scheduled[i].get("outing") == active_outing and int(_scheduled[i].get("departure_min")) == active_departure_min:
+			_scheduled.remove_at(i)
+			break
+
+	active_outing = null
+	active_departure_min = -1
+	active_partner_ref = ""
+	_departure_deadline_emitted = false
 
 
 func get_affinity(partner_ref: String) -> int:
@@ -207,16 +393,31 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 	var clock: Node = get_node_or_null("/root/GameClock")
 	if clock and clock.has_method("create_countdown"):
 		if active_outing != null:
-			if active_departure_min > current_time and not _departure_deadline_emitted:
-				if not bool(clock.call("has_countdown", &"outing_departure_deadline")):
+			var grace_end: int = active_departure_min + active_outing.late_grace_min
+			if current_time >= grace_end:
+				_miss_outing()
+			else:
+				if active_departure_min > current_time and not _departure_deadline_emitted:
+					if not bool(clock.call("has_countdown", &"outing_departure_deadline")):
+						clock.call(
+							"create_countdown",
+							&"outing_departure_deadline",
+							active_departure_min,
+							{
+								"outing_id": str(active_outing.id),
+								"departure_min": active_departure_min,
+								"partner_ref": active_partner_ref,
+							}
+						)
+				if not bool(clock.call("has_countdown", &"outing_late_grace_deadline")):
 					clock.call(
 						"create_countdown",
-						&"outing_departure_deadline",
-						active_departure_min,
+						&"outing_late_grace_deadline",
+						grace_end,
 						{
 							"outing_id": str(active_outing.id),
 							"departure_min": active_departure_min,
-							"partner_ref": active_partner_ref,
+							"grace_end": grace_end,
 						}
 					)
 		else:
@@ -251,23 +452,40 @@ func _start_prep(entry: Dictionary) -> void:
 	if clock and clock.has_method("cancel_countdown"):
 		clock.call("cancel_countdown", &"outing_prep_start")
 
-	if clock and clock.has_method("create_countdown") and active_departure_min > _get_current_minute():
-		clock.call(
-			"create_countdown",
-			&"outing_departure_deadline",
-			active_departure_min,
-			{
-				"outing_id": str(active_outing.id),
-				"departure_min": active_departure_min,
-				"partner_ref": active_partner_ref,
-			}
-		)
+	var current_time: int = _get_current_minute()
+	if clock and clock.has_method("create_countdown"):
+		if active_departure_min > current_time:
+			clock.call(
+				"create_countdown",
+				&"outing_departure_deadline",
+				active_departure_min,
+				{
+					"outing_id": str(active_outing.id),
+					"departure_min": active_departure_min,
+					"partner_ref": active_partner_ref,
+				}
+			)
+		var grace_end: int = active_departure_min + active_outing.late_grace_min
+		if grace_end > current_time:
+			clock.call(
+				"create_countdown",
+				&"outing_late_grace_deadline",
+				grace_end,
+				{
+					"outing_id": str(active_outing.id),
+					"departure_min": active_departure_min,
+					"grace_end": grace_end,
+				}
+			)
 
 	prep_started.emit(active_outing)
 
-	if active_departure_min <= _get_current_minute() and not _departure_deadline_emitted:
+	if active_departure_min <= current_time and not _departure_deadline_emitted:
 		_departure_deadline_emitted = true
 		departure_deadline_reached.emit(active_outing)
+
+	if active_departure_min + active_outing.late_grace_min <= current_time:
+		_miss_outing()
 
 
 func _on_countdown_finished(id: StringName, payload: Dictionary) -> void:
@@ -289,6 +507,9 @@ func _on_countdown_finished(id: StringName, payload: Dictionary) -> void:
 		if active_outing != null and not _departure_deadline_emitted:
 			_departure_deadline_emitted = true
 			departure_deadline_reached.emit(active_outing)
+	elif id == &"outing_late_grace_deadline":
+		if active_outing != null:
+			_miss_outing()
 
 
 func _on_minute_ticked(now_minute: int) -> void:
@@ -314,6 +535,9 @@ func _check_schedule_triggers(now_minute: int) -> void:
 		if now_minute >= active_departure_min and not _departure_deadline_emitted:
 			_departure_deadline_emitted = true
 			departure_deadline_reached.emit(active_outing)
+		var grace_end: int = active_departure_min + active_outing.late_grace_min
+		if now_minute >= grace_end:
+			_miss_outing()
 
 
 func _resolve_outing_resource(ref_str: String) -> OutingData:

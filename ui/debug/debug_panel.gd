@@ -576,6 +576,8 @@ func _setup_outings_section() -> void:
 	add_button(section, "Schedule Date Night (+2h)", _on_schedule_date_night_pressed)
 	add_button(section, "Skip to Prep Start", _on_skip_to_prep_start_pressed)
 	add_button(section, "Skip to Departure", _on_skip_to_departure_pressed)
+	add_button(section, "Depart Outing Now", _on_depart_outing_pressed)
+	add_button(section, "Skip Past Grace End (+40m)", _on_skip_past_grace_pressed)
 
 	add_watch(section, "Active Outing", func() -> String:
 		var om: Node = get_node_or_null("/root/OutingManager")
@@ -597,6 +599,19 @@ func _setup_outings_section() -> void:
 		if clock and bool(clock.call("has_countdown", &"outing_departure_deadline")):
 			var rem: int = int(clock.call("remaining", &"outing_departure_deadline"))
 			return "%02d:%02d (%d min)" % [rem / 60, rem % 60, rem]
+		return "--"
+	)
+
+	add_watch(section, "Evaluation", func() -> String:
+		var om: Node = get_node_or_null("/root/OutingManager")
+		if om and bool(om.call("is_prep_active")):
+			var ev: Dictionary = om.call("evaluate")
+			var res_str: String = "FAIL"
+			match ev.get("result", Enums.OutingResult.FAIL):
+				Enums.OutingResult.PASS: res_str = "PASS"
+				Enums.OutingResult.PARTIAL: res_str = "PARTIAL"
+				Enums.OutingResult.FAIL: res_str = "FAIL"
+			return "Score: %d%% (%s) | Late: %d min" % [int(round(float(ev.get("score", 0.0)) * 100.0)), res_str, int(ev.get("lateness_min", 0))]
 		return "--"
 	)
 
@@ -665,6 +680,27 @@ func _on_skip_to_departure_pressed() -> void:
 		if dep > now_m:
 			clock.call("skip", dep - now_m)
 			_refresh_watches()
+
+
+func _on_depart_outing_pressed() -> void:
+	var om: Node = get_node_or_null("/root/OutingManager")
+	if om and bool(om.call("is_prep_active")):
+		om.call("depart")
+		_refresh_watches()
+
+
+func _on_skip_past_grace_pressed() -> void:
+	var om: Node = get_node_or_null("/root/OutingManager")
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if om and clock and bool(om.call("is_prep_active")):
+		var dep: int = int(om.get("active_departure_min"))
+		var out: OutingData = om.get("active_outing") as OutingData
+		var grace: int = out.late_grace_min if out else 30
+		var grace_end: int = dep + grace
+		var now_m: int = int(clock.get("now_minutes"))
+		if grace_end >= now_m:
+			clock.call("skip", (grace_end - now_m) + 1)
+		_refresh_watches()
 
 
 func add_section(title: String) -> Container:

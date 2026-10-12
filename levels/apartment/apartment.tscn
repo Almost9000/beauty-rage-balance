@@ -1,4 +1,4 @@
-[gd_scene load_steps=129 format=3]
+[gd_scene load_steps=130 format=3]
 
 [ext_resource type="Script" path="res://core/components/level_root.gd" id="1_rr8ky"]
 [ext_resource type="Material" path="res://assets/materials/wall.tres" id="2_k1ayl"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://features/wardrobe/closet.tscn" id="11_closet"]
 [ext_resource type="PackedScene" path="res://features/prep/shower.tscn" id="12_shower"]
 [ext_resource type="PackedScene" path="res://features/makeup/vanity_station.tscn" id="13_vanity"]
+[ext_resource type="PackedScene" path="res://features/prep/front_door.tscn" id="14_door"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8qlm"]
 sky_top_color = Color(0.38, 0.55, 0.78, 1)
@@ -1002,6 +1003,8 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.3, 0
 
 [node name="front_door" type="Marker3D" parent="Stations"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="FrontDoor" parent="Stations/front_door" instance=ExtResource("14_door")]
 
 [node name="dog_bowls" type="Marker3D" parent="Stations"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.8, 0, -3.8)
