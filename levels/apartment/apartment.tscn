@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" path="res://features/dogs/maja.tscn" id="18_maja"]
 [ext_resource type="PackedScene" path="res://features/dogs/cipa.tscn" id="19_cipa"]
 [ext_resource type="PackedScene" path="res://features/narrative/dialogue_box.tscn" id="20_dialogue"]
+[ext_resource type="PackedScene" path="res://features/day_loop/bed_station.tscn" id="21_bed"]
 
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8qlm"]
@@ -1008,6 +1009,8 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.3, 0
 [node name="bed" type="Marker3D" parent="Stations"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.3, 0, -3.2)
 
+[node name="BedStation" parent="Stations/bed" instance=ExtResource("21_bed")]
+
 [node name="front_door" type="Marker3D" parent="Stations"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 
@@ -1069,17 +1072,6 @@ layer = 5
 script = ExtResource("7_od3c7")
 
 [node name="DialogueBox" parent="." instance=ExtResource("20_dialogue")]
-
-[node name="BedInteractable" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8, 0.5, -3.2)
-collision_layer = 4
-collision_mask = 0
-script = ExtResource("8_02syn")
-prompt_text = "Rest"
-enabled = false
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BedInteractable"]
-shape = SubResource("BoxShape3D_i18nu")
 
 [node name="Player" type="CharacterBody3D" parent="." groups=["player"] instance=ExtResource("9_noc1r")]
 collision_layer = 2

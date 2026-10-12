@@ -367,7 +367,7 @@ func to_dict() -> Dictionary:
 	}
 
 
-func from_dict(data: Dictionary) -> void:
+func from_dict(data: Dictionary, _version: int = 1) -> void:
 	if data.has("apps") and data["apps"] is Dictionary:
 		var apps_data: Dictionary = data["apps"]
 		for key: String in apps_data:

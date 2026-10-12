@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DayConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resources/day_config.gd" id="1_dayconfig"]
+
+[resource]
+script = ExtResource("1_dayconfig")
+wake_minute = 480
+pressure_minute = 840
+bedtime_earliest_minute = 1260
+passout_minute_of_day = 120
+sleep_health_bonus = 30.0
+sleep_sanity_bonus = 20.0
+passout_health_penalty = -20.0
+passout_wake_minute = 600
+default_outing_departure_minute = 960

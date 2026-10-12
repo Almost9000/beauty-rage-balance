@@ -39,6 +39,14 @@ func to_dict() -> Dictionary:
 		item["expires_at"] = int(entry["expires_at"])
 		mods.append(item)
 
+	mods.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var sa: String = str(a.get("source_id", ""))
+		var sb: String = str(b.get("source_id", ""))
+		if sa != sb:
+			return sa < sb
+		return int(a.get("stat", 0)) < int(b.get("stat", 0))
+	)
+
 	return {
 		"values": vals,
 		"modifiers": mods,

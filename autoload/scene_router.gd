@@ -128,7 +128,14 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 		for k: Variant in (states as Dictionary).keys():
 			var val: Variant = (states as Dictionary)[k]
 			if val is Dictionary:
-				_level_states[str(k)] = (val as Dictionary).duplicate(true)
+				var subdict: Dictionary = {}
+				for sk: Variant in (val as Dictionary).keys():
+					var sv: Variant = (val as Dictionary)[sk]
+					if sv is float and is_equal_approx(sv, roundf(sv)):
+						subdict[str(sk)] = int(sv)
+					else:
+						subdict[str(sk)] = sv
+				_level_states[str(k)] = subdict
 			else:
 				_level_states[str(k)] = val
 	_pending_spawn_id = &"default"

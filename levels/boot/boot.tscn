@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxnm4p8k2wrtv"]
+[gd_scene load_steps=3 format=3 uid="uid://cxnm4p8k2wrtv"]
 
 [ext_resource type="Script" path="res://levels/boot/boot.gd" id="1_boot"]
+[ext_resource type="Theme" path="res://ui/theme/brb_theme.tres" id="2_theme"]
 
 [node name="Boot" type="Node"]
 script = ExtResource("1_boot")
@@ -11,4 +12,55 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+color = Color(0.06, 0.07, 0.1, 1)
+
+[node name="MenuCanvas" type="CanvasLayer" parent="."]
+
+[node name="CenterContainer" type="CenterContainer" parent="MenuCanvas"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="VBox" type="VBoxContainer" parent="MenuCanvas/CenterContainer"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="MenuCanvas/CenterContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.98, 1)
+theme_override_font_sizes/font_size = 32
+text = "BEAUTY, RAGE, BALANCE"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="MenuCanvas/CenterContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.78, 1)
+theme_override_font_sizes/font_size = 14
+text = "The self-directed life of an independent woman"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MenuCanvas/CenterContainer/VBox"]
+layout_mode = 2
+
+[node name="ButtonsVBox" type="VBoxContainer" parent="MenuCanvas/CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ContinueButton" type="Button" parent="MenuCanvas/CenterContainer/VBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "Continue"
+
+[node name="NewGameButton" type="Button" parent="MenuCanvas/CenterContainer/VBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "New Game"
+
+[node name="QuitButton" type="Button" parent="MenuCanvas/CenterContainer/VBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "Quit"
