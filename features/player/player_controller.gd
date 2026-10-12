@@ -12,6 +12,7 @@ signal input_locked_changed(locked: bool)
 @onready var camera_rig: CameraRig = get_node_or_null("CameraRig") as CameraRig
 @onready var interaction_probe: InteractionProbe = get_node_or_null("InteractionProbe") as InteractionProbe
 @onready var avatar_mount: Node3D = get_node_or_null("AvatarMount") as Node3D
+@onready var avatar: OutfitSlots = get_node_or_null("AvatarMount/Avatar") as OutfitSlots
 
 var target_mouse_mode: Input.MouseMode = Input.MOUSE_MODE_CAPTURED
 var _lock_reasons: Dictionary = {}
@@ -64,6 +65,9 @@ func _physics_process(delta: float) -> void:
 	velocity.z = move_toward(velocity.z, target_vel.z, accel * delta)
 
 	move_and_slide()
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	if avatar:
+		avatar.set_movement_speed(horizontal_speed, move_speed)
 
 	if move_direction.length_squared() > 0.001:
 		var target_angle := atan2(-move_direction.x, -move_direction.z)
