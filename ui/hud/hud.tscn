@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwh7xk8m1r2py"]
+[gd_scene load_steps=5 format=3 uid="uid://bwh7xk8m1r2py"]
 
 [ext_resource type="Theme" path="res://ui/theme/brb_theme.tres" id="1_theme"]
 [ext_resource type="Script" path="res://ui/hud/hud.gd" id="2_hud"]
 [ext_resource type="PackedScene" path="res://ui/widgets/stat_bar.tscn" id="3_stat_bar"]
+[ext_resource type="PackedScene" path="res://features/prep/prep_checklist_ui.tscn" id="4_prep"]
 
 [node name="HUD" type="CanvasLayer"]
 layer = 5
@@ -112,3 +113,7 @@ layout_mode = 2
 [node name="ModifiersList" type="VBoxContainer" parent="RootControl/TopRightContainer/RightVBox/PhaseContainer/ModifiersPanel/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 4
+
+[node name="PrepChecklistUI" parent="RootControl/TopRightContainer/RightVBox" instance=ExtResource("4_prep")]
+visible = false
+layout_mode = 2

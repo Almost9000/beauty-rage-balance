@@ -7,6 +7,7 @@ func before_each() -> void:
 	GameSettings.reset_current()
 	GameClock.reset_state()
 	StatusManager.reset_state()
+	InventoryManager.reset_state()
 	shower_scene = load("res://features/prep/shower.tscn") as PackedScene
 
 
@@ -14,6 +15,7 @@ func after_each() -> void:
 	GameSettings.reset_current()
 	GameClock.reset_state()
 	StatusManager.reset_state()
+	InventoryManager.reset_state()
 
 
 func test_shower_action_advances_time_and_boosts_stats() -> void:
@@ -65,3 +67,17 @@ func test_shower_custom_duration_and_effects() -> void:
 
 	assert_eq(GameClock.now_minutes - start_min, 30, "Clock skipped custom 30 min")
 	assert_gt(StatusManager.get_value(Enums.Stat.HYGIENE), start_hygiene + 45.0, "Custom effect applied")
+
+
+func test_shower_clears_makeup_look() -> void:
+	var shower: Shower = shower_scene.instantiate() as Shower
+	add_child_autoqfree(shower)
+
+	var look := MakeupLook.new()
+	look.id = &"test_look"
+	InventoryManager.set_look(look)
+	assert_not_null(InventoryManager.current_look, "Makeup look is active before shower")
+
+	shower.execute_action()
+
+	assert_null(InventoryManager.current_look, "Shower cleared the makeup look")

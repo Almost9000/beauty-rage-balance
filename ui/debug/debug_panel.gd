@@ -27,6 +27,7 @@ func _ready() -> void:
 	_setup_money_section()
 	_setup_outfit_section()
 	_setup_makeup_section()
+	_setup_outings_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
 
 var _capture_path: String = ""
@@ -566,6 +567,105 @@ func _on_clear_look_pressed() -> void:
 	if inv and inv.has_method("clear_look"):
 		inv.call("clear_look")
 		_sync_makeup_sliders_from_look()
+
+
+func _setup_outings_section() -> void:
+	var section: Container = add_section("Outings")
+
+	add_button(section, "Schedule Girls' Day Out (+2h)", _on_schedule_girls_day_out_pressed)
+	add_button(section, "Schedule Date Night (+2h)", _on_schedule_date_night_pressed)
+	add_button(section, "Skip to Prep Start", _on_skip_to_prep_start_pressed)
+	add_button(section, "Skip to Departure", _on_skip_to_departure_pressed)
+
+	add_watch(section, "Active Outing", func() -> String:
+		var om: Node = get_node_or_null("/root/OutingManager")
+		if om and om.get("active_outing") != null:
+			var out: OutingData = om.get("active_outing") as OutingData
+			return out.display_name if out else "None"
+		return "None"
+	)
+
+	add_watch(section, "Prep Active", func() -> String:
+		var om: Node = get_node_or_null("/root/OutingManager")
+		if om and bool(om.call("is_prep_active")):
+			return "Yes"
+		return "No"
+	)
+
+	add_watch(section, "Countdown to Departure", func() -> String:
+		var clock: Node = get_node_or_null("/root/GameClock")
+		if clock and bool(clock.call("has_countdown", &"outing_departure_deadline")):
+			var rem: int = int(clock.call("remaining", &"outing_departure_deadline"))
+			return "%02d:%02d (%d min)" % [rem / 60, rem % 60, rem]
+		return "--"
+	)
+
+	add_watch(section, "Checklist State", func() -> String:
+		var om: Node = get_node_or_null("/root/OutingManager")
+		if om and bool(om.call("is_prep_active")):
+			var items: Array[Dictionary] = om.call("get_checklist")
+			if items.is_empty():
+				return "No checks"
+			var lines: PackedStringArray = []
+			for it: Dictionary in items:
+				var status: String = "[PASS]" if bool(it.get("passed", false)) else "[FAIL]"
+				lines.append("%s %s: %d%%" % [status, it.get("label", ""), int(round(float(it.get("score", 0.0)) * 100.0))])
+			return "\n" + "\n".join(lines)
+		return "No active prep"
+	)
+
+
+func _on_schedule_girls_day_out_pressed() -> void:
+	var om: Node = get_node_or_null("/root/OutingManager")
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if om and clock:
+		var outing: OutingData = load("res://data/outings/girls_day_out.tres") as OutingData
+		if outing:
+			var dep: int = int(clock.get("now_minutes")) + 120
+			om.call("schedule", outing, dep, "Chloe")
+			_refresh_watches()
+
+
+func _on_schedule_date_night_pressed() -> void:
+	var om: Node = get_node_or_null("/root/OutingManager")
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if om and clock:
+		var outing: OutingData = load("res://data/outings/date_night.tres") as OutingData
+		if outing:
+			var dep: int = int(clock.get("now_minutes")) + 120
+			om.call("schedule", outing, dep, "Liam")
+			_refresh_watches()
+
+
+func _on_skip_to_prep_start_pressed() -> void:
+	var om: Node = get_node_or_null("/root/OutingManager")
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if om and clock:
+		var scheduled: Array = om.call("get_scheduled")
+		for entry_val: Variant in scheduled:
+			if entry_val is Dictionary:
+				var entry: Dictionary = entry_val as Dictionary
+				if not bool(entry.get("prep_started", false)):
+					var out: OutingData = entry.get("outing") as OutingData
+					var dep: int = int(entry.get("departure_min", 0))
+					var prep_start: int = dep - out.prep_window_min
+					var now_m: int = int(clock.get("now_minutes"))
+					if prep_start > now_m:
+						clock.call("skip", prep_start - now_m)
+						_refresh_watches()
+						return
+
+
+func _on_skip_to_departure_pressed() -> void:
+	var om: Node = get_node_or_null("/root/OutingManager")
+	var clock: Node = get_node_or_null("/root/GameClock")
+	if om and clock:
+		var dep: int = int(om.get("active_departure_min"))
+		var now_m: int = int(clock.get("now_minutes"))
+		if dep > now_m:
+			clock.call("skip", dep - now_m)
+			_refresh_watches()
+
 
 func add_section(title: String) -> Container:
 	var section_panel: VBoxContainer = VBoxContainer.new()

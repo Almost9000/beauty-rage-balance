@@ -46,7 +46,7 @@ The autoload execution and registration order in `project.godot` is fixed as fol
 
 | Signal | Payload | Emitter | Planned Listeners | Task Introduced |
 |---|---|---|---|---|
-| `outing_scheduled` | `outing_data: OutingData` | `DatingApp`, `NarrativeManager` | `OutingManager`, `Phone` | Task 15 |
+| `outing_scheduled` | `outing_ref: String, departure_min: int, partner_ref: String` | `OutingManager` | `Phone`, `NarrativeManager` | Task 15 |
 | `item_purchased` | `item: Resource` | `ShopApp`, `ThriftStore` | `InventoryManager`, `FinanceManager` | Task 19 |
 | `clutter_cleaned` | `amount: int` | `Clutter` | `DayDirector`, `StatusManager` | Task 20 |
 | `dog_need_changed` | `dog_id: StringName, need: StringName, value: float` | `DogBrain` | `HUD`, `DayDirector` | Task 21 |
