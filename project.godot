@@ -26,6 +26,8 @@ InventoryManager="*res://autoload/inventory_manager.gd"
 OutingManager="*res://autoload/outing_manager.gd"
 NarrativeManager="*res://autoload/narrative_manager.gd"
 SceneRouter="*res://autoload/scene_router.gd"
+DayDirector="*res://autoload/day_director.gd"
+SaveManager="*res://autoload/save_manager.gd"
 Phone="*res://features/phone/phone.tscn"
 DebugPanel="*res://ui/debug/debug_panel.tscn"
 

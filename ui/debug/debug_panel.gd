@@ -31,6 +31,7 @@ func _ready() -> void:
 	_setup_cleaning_section()
 	_setup_dogs_section()
 	_setup_narrative_section()
+	_setup_save_day_section()
 	_capture_path = OS.get_environment("BRB_CAPTURE_SCREENSHOT")
 
 
@@ -918,6 +919,72 @@ func _debug_trigger_event(event_id: StringName) -> void:
 		nm.call("trigger_event", event_id)
 	_refresh_watches()
 
+
+func _setup_save_day_section() -> void:
+	var section: Container = add_section("Save & Day Loop")
+
+	add_watch(section, "Current Beat", func() -> String:
+		var dd: Node = get_node_or_null("/root/DayDirector")
+		if dd and "current_beat" in dd:
+			var b: int = int(dd.get("current_beat"))
+			if b >= 0 and b < DayDirector.Beat.size():
+				return DayDirector.Beat.keys()[b]
+		return "--"
+	)
+
+	add_watch(section, "Day Parity", func() -> String:
+		var dd: Node = get_node_or_null("/root/DayDirector")
+		if dd and "is_thrift_day" in dd:
+			return "Thrift Day" if bool(dd.get("is_thrift_day")) else "Outing Day"
+		return "--"
+	)
+
+	add_watch(section, "Save Exists", func() -> String:
+		var sm: Node = get_node_or_null("/root/SaveManager")
+		if sm and sm.has_method("has_save"):
+			return "Yes" if bool(sm.call("has_save")) else "No"
+		return "--"
+	)
+
+	add_button(section, "Save Game", func() -> void:
+		var sm: Node = get_node_or_null("/root/SaveManager")
+		if sm and sm.has_method("save_game"):
+			sm.call("save_game")
+		_refresh_watches()
+	)
+
+	add_button(section, "Load Game", func() -> void:
+		var sm: Node = get_node_or_null("/root/SaveManager")
+		if sm and sm.has_method("load_game"):
+			sm.call("load_game", true)
+		_refresh_watches()
+	)
+
+	add_button(section, "Delete Save", func() -> void:
+		var sm: Node = get_node_or_null("/root/SaveManager")
+		if sm and sm.has_method("delete_save"):
+			sm.call("delete_save")
+		_refresh_watches()
+	)
+
+	add_button(section, "Advance Beat", func() -> void:
+		var dd: Node = get_node_or_null("/root/DayDirector")
+		if dd and dd.has_method("advance_beat"):
+			dd.call("advance_beat")
+		_refresh_watches()
+	)
+
+	add_button(section, "Trigger Bedtime", func() -> void:
+		var dd: Node = get_node_or_null("/root/DayDirector")
+		var clock: Node = get_node_or_null("/root/GameClock")
+		if clock and dd and "config" in dd and dd.config:
+			var target_min: int = (clock.get_day() - 1) * 1440 + dd.config.bedtime_earliest_minute
+			if clock.now_minutes < target_min:
+				clock.skip(target_min - clock.now_minutes)
+		if dd and dd.has_method("trigger_night_summary"):
+			dd.call("trigger_night_summary")
+		_refresh_watches()
+	)
 
 
 func add_section(title: String) -> Container:

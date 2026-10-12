@@ -1,0 +1,167 @@
+[gd_scene load_steps=3 format=3 uid="uid://n1ghtsummary001"]
+
+[ext_resource type="Theme" path="res://ui/theme/brb_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://features/day_loop/night_summary.gd" id="2_script"]
+
+[node name="NightSummary" type="CanvasLayer"]
+layer = 80
+script = ExtResource("2_script")
+
+[node name="ModalCenter" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+
+[node name="Backdrop" type="ColorRect" parent="ModalCenter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.05, 0.08, 0.8)
+
+[node name="PanelContainer" type="PanelContainer" parent="ModalCenter"]
+custom_minimum_size = Vector2(560, 520)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -260.0
+offset_right = 280.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ModalCenter/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.96, 0.98, 1)
+theme_override_font_sizes/font_size = 20
+text = "Day 1 Complete — Night Summary"
+horizontal_alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ContentVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="FinanceVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="FinanceHeader" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/FinanceVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "FINANCES"
+
+[node name="FinanceLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/FinanceVBox"]
+layout_mode = 2
+text = "Earned: €0.00  |  Spent: €0.00  |  Net: €0.00\nFinal Wallet Balance: €0.00"
+
+[node name="HSep1" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+
+[node name="StatsVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StatsHeader" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/StatsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "STATUS DELTAS"
+
+[node name="StatsLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/StatsVBox"]
+layout_mode = 2
+text = "Sanity: 80 (+0)  •  Health: 90 (+0)  •  Hygiene: 80 (+0)  •  Rage: 10 (+0)"
+
+[node name="HSep2" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+
+[node name="OutingVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="OutingHeader" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/OutingVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "OUTINGS"
+
+[node name="OutingLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/OutingVBox"]
+layout_mode = 2
+text = "None (No scheduled outing)"
+
+[node name="HSep3" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+
+[node name="NarrativeVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NarrativeHeader" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/NarrativeVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "SOCIAL & BOUNDARIES"
+
+[node name="NarrativeList" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/NarrativeVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HSep4" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+
+[node name="CareVBox" type="VBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CareHeader" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/CareVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.68, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "APARTMENT & DOGS"
+
+[node name="CareLabel" type="Label" parent="ModalCenter/PanelContainer/MarginContainer/VBox/Scroll/ContentVBox/CareVBox"]
+layout_mode = 2
+text = "Clutter Cleaned: 0 items\nDog Care: 0 walks, 0 meals, 0 cuddles"
+
+[node name="HSeparator2" type="HSeparator" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="ButtonHBox" type="HBoxContainer" parent="ModalCenter/PanelContainer/MarginContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="SleepButton" type="Button" parent="ModalCenter/PanelContainer/MarginContainer/VBox/ButtonHBox"]
+custom_minimum_size = Vector2(200, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Sleep"

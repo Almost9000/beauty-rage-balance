@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3dst4t10n001"]
+
+[ext_resource type="Script" path="res://features/day_loop/bed_station.gd" id="1_bed"]
+[ext_resource type="Script" path="res://core/components/interactable.gd" id="2_int"]
+[ext_resource type="PackedScene" path="res://features/day_loop/night_summary.tscn" id="3_summary"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_int"]
+size = Vector3(2.5, 1.8, 2.5)
+
+[node name="BedStation" type="Node3D"]
+script = ExtResource("1_bed")
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_int")
+prompt_text = "Go to Sleep"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.9, 0)
+shape = SubResource("BoxShape3D_int")
+
+[node name="NightSummary" parent="." instance=ExtResource("3_summary")]
+
+[node name="FadeCanvas" type="CanvasLayer" parent="."]
+layer = 95
+
+[node name="FadeOverlay" type="ColorRect" parent="FadeCanvas"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="NoticeCanvas" type="CanvasLayer" parent="."]
+layer = 96
+
+[node name="NoticeBanner" type="PanelContainer" parent="NoticeCanvas"]
+visible = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="NoticeCanvas/NoticeBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 15
+text = "Too early to sleep (available after 21:00)"
+horizontal_alignment = 1
+vertical_alignment = 1

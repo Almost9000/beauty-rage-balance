@@ -290,6 +290,9 @@ func _on_level_changed(_level_id: String) -> void:
 func _on_narrative_requested(event_id: StringName) -> void:
 	if event_id.is_empty():
 		try_trigger()
+	elif event_id == &"daily_pressure":
+		if not trigger_event(event_id):
+			try_trigger()
 	else:
 		trigger_event(event_id)
 

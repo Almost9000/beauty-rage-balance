@@ -272,7 +272,14 @@ func from_dict(data: Dictionary, _version: int = 1) -> void:
 				var payload_val: Variant = (entry as Dictionary).get("payload", {})
 				var payload_dict: Dictionary = {}
 				if payload_val is Dictionary:
-					payload_dict = (payload_val as Dictionary).duplicate(true)
+					for pk: Variant in (payload_val as Dictionary).keys():
+						var pv: Variant = (payload_val as Dictionary)[pk]
+						if pv is float and is_equal_approx(pv, roundf(pv)):
+							payload_dict[pk] = int(pv)
+						elif pv is Dictionary:
+							payload_dict[pk] = (pv as Dictionary).duplicate(true)
+						else:
+							payload_dict[pk] = pv
 				_countdowns[StringName(str(k))] = {
 					"deadline_min": int((entry as Dictionary).get("deadline_min", 0)),
 					"payload": payload_dict
